@@ -19,6 +19,3 @@ spring:
   kafka:
     producer:
       bootstrap-servers: localhost:9092 # Kafka cluster 초기 연결 Port
-
-topic:
-  name: my-topic

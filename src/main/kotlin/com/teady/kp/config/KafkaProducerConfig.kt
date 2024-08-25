@@ -1,7 +1,7 @@
 package com.teady.kp.config
 
+import com.teady.kp.repository.data.dto.BoardDto
 import org.apache.kafka.clients.producer.ProducerConfig
-import org.apache.kafka.common.protocol.Message
 import org.apache.kafka.common.serialization.StringSerializer
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.kafka.annotation.EnableKafka
 import org.springframework.kafka.core.DefaultKafkaProducerFactory
 import org.springframework.kafka.core.KafkaTemplate
+import org.springframework.kafka.support.serializer.JsonSerializer
 import java.io.Serializable
 
 @EnableKafka
@@ -19,8 +20,8 @@ class KafkaProducerConfig {
     lateinit var bootstrapServer: String
 
     @Bean
-    fun kafkaTemplate(): KafkaTemplate<String, String> {
-        val factory = DefaultKafkaProducerFactory<String, String>(producerConfigs())
+    fun kafkaTemplate(): KafkaTemplate<String, BoardDto> {
+        val factory = DefaultKafkaProducerFactory<String, BoardDto>(producerConfigs())
         return KafkaTemplate(factory)
     }
 
@@ -29,6 +30,6 @@ class KafkaProducerConfig {
         mapOf(
             ProducerConfig.BOOTSTRAP_SERVERS_CONFIG to bootstrapServer,
             ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG to StringSerializer::class.java,
-            ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG to StringSerializer::class.java
+            ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG to JsonSerializer::class.java
         )
 }
