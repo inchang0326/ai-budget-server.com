@@ -1,6 +1,6 @@
-package com.teady.kp.domain.board.repository
+package com.teady.kp.adapter.secondary.jpa
 
 import com.teady.kp.domain.board.entity.Board
 import org.springframework.data.repository.CrudRepository
 
-interface BoardRepository : CrudRepository<Board, Integer>
+interface JpaBoardRepository : CrudRepository<Board, Integer>
