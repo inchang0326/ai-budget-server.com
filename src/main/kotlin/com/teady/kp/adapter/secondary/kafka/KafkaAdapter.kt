@@ -1,6 +1,7 @@
-package com.teady.kp.config
+package com.teady.kp.adapter.secondary.kafka
 
-import com.teady.kp.repository.data.dto.BoardDto
+import com.teady.kp.adapter.secondary.kafka.port.KafkaPort
+import com.teady.kp.application.dto.BoardDto
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.serialization.StringSerializer
 import org.springframework.beans.factory.annotation.Value
@@ -14,19 +15,19 @@ import java.io.Serializable
 
 @EnableKafka
 @Configuration
-class KafkaProducerConfig {
+class KafkaAdapter : KafkaPort{
 
     @Value("\${spring.kafka.producer.bootstrap-servers}")
     lateinit var bootstrapServer: String
 
     @Bean
-    fun kafkaTemplate(): KafkaTemplate<String, BoardDto> {
+    override fun kafkaTemplate(): KafkaTemplate<String, BoardDto> {
         val factory = DefaultKafkaProducerFactory<String, BoardDto>(producerConfigs())
         return KafkaTemplate(factory)
     }
 
     @Bean
-    fun producerConfigs(): Map<String, Serializable> =
+    override fun producerConfigs(): Map<String, Serializable> =
         mapOf(
             ProducerConfig.BOOTSTRAP_SERVERS_CONFIG to bootstrapServer,
             ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG to StringSerializer::class.java,

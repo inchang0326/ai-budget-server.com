@@ -1,6 +1,6 @@
-package com.teady.kp.repository.data.dto
+package com.teady.kp.application.dto
 
-import com.teady.kp.repository.data.entity.Board
+import com.teady.kp.domain.board.entity.Board
 
 data class BoardDto(val uuid : Long, val author : String, val contents : String, val emotion : String, val createdAt : String?) {
     fun toEntity(): Board = Board(author = author, contents = contents, emotion = emotion)

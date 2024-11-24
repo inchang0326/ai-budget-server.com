@@ -1,4 +1,4 @@
-package com.teady.kp.repository.data.entity;
+package com.teady.kp.domain.board.entity;
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity;
