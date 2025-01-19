@@ -22,5 +22,5 @@ class WebBoardAdapter (
     }
 
     @GetMapping("/items")
-    fun items() : List<BoardDto> = webBoardAdapterPort.items()
+    fun items() : MutableIterable<BoardDto> = webBoardAdapterPort.items()
 }
