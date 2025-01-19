@@ -5,5 +5,5 @@ import org.springframework.http.HttpStatus
 
 interface WebBoardAdapterPort {
     fun upload(boardDto : BoardDto) : HttpStatus
-    fun items() : List<BoardDto>
+    fun items() : MutableIterable<BoardDto>
 }

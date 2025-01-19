@@ -18,13 +18,14 @@ class BoardUseCase (
     private val kafkaProducerPort: KafkaProducerPort
 ) : WebBoardAdapterPort {
     override fun upload(boardDto : BoardDto) : HttpStatus {
-        boardRepositoryPort.save(boardDto.toEntity())
+        val dto = boardExecutor.doSomething(boardDto)
+        boardRepositoryPort.save(dto.toEntity())
         kafkaProducerPort.send("1", boardDto)
         return HttpStatus.OK
     }
 
-    override fun items() : List<BoardDto> {
-        val list: MutableIterable<Board> = boardRepositoryPort.findAll()
-        return list.map { b -> BoardDto.fromEntity(b) }.toList()
+    override fun items() : MutableIterable<BoardDto> {
+        val boardDtolist: MutableIterable<Board> = boardRepositoryPort.findAll()
+        return boardExecutor.doSomething(boardDtolist.map { b -> BoardDto.fromEntity(b) }.toMutableList())
     }
 }
