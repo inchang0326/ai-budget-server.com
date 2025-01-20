@@ -19,3 +19,13 @@ spring:
   kafka:
     producer:
       bootstrap-servers: localhost:9092 # Kafka cluster 초기 연결 Port
+  ai:
+    ollama:
+      base-url: http://localhost:11434
+      init:
+        pull-model-strategy: always
+        timeout: 60s
+        max-retries: 1
+      chat:
+        options:
+          model: llama3.2
