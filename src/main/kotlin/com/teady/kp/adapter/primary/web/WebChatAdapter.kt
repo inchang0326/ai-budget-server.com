@@ -1,23 +1,19 @@
 package com.teady.kp.adapter.primary.web
 
-import org.springframework.ai.ollama.OllamaChatModel
-import org.springframework.web.bind.annotation.GetMapping
+import com.teady.kp.adapter.primary.web.port.WebChatAdapterPort
+import com.teady.kp.application.dto.ChatDto
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/ai")
+@RequestMapping("/chat")
 class WebChatAdapter(
-    private val chatModel: OllamaChatModel
+    private val webChatAdapterPort: WebChatAdapterPort
 ) {
-    @GetMapping("/generate")
-    fun generate(
-        @RequestParam(
-            value = "message",
-            defaultValue = "Tell me a joke"
-        ) message: String?
-    ): Map<String, String> {
-        return java.util.Map.of("generation", chatModel.call(message))
+    @PostMapping("/question")
+    fun ask(@RequestBody chatDto: ChatDto): Map<String, String> {
+        return webChatAdapterPort.ask(chatDto)
     }
 }
