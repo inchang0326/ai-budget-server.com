@@ -15,12 +15,12 @@ class WebBoardAdapter (
     private val webBoardAdapterPort: WebBoardAdapterPort
 ) {
 
-    @PostMapping("/upload")
+    @PostMapping("/item")
     fun upload(@RequestBody boardDto: BoardDto) : HttpStatus {
         webBoardAdapterPort.upload(boardDto)
         return HttpStatus.OK
     }
 
     @GetMapping("/items")
-    fun items() : MutableIterable<BoardDto> = webBoardAdapterPort.items()
+    fun retrieve() : MutableIterable<BoardDto> = webBoardAdapterPort.items()
 }

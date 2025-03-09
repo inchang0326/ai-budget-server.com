@@ -14,7 +14,7 @@ import java.io.Serializable
 
 @EnableKafka
 @Configuration
-class KafkaProducerConfiguration {
+class KafkaConfig {
 
     @Value("\${spring.kafka.producer.bootstrap-servers}")
     lateinit var bootstrapServer: String
