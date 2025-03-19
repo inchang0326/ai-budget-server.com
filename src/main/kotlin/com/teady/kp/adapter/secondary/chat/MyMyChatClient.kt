@@ -1,6 +1,6 @@
 package com.teady.kp.adapter.secondary.chat
 
-import com.teady.kp.adapter.secondary.chat.port.ChatClientPort
+import com.teady.kp.adapter.secondary.chat.port.MyChatClientPort
 import com.teady.kp.application.dto.ChatDto
 import org.springframework.ai.chat.memory.ChatMemory
 import org.springframework.ai.chat.messages.AssistantMessage
@@ -12,16 +12,16 @@ import org.springframework.ai.ollama.OllamaChatModel
 import org.springframework.stereotype.Component
 
 @Component
-class ChatClient(
+class MyMyChatClient(
     private val chatMemory: ChatMemory,
     private val ollamaChatModel: OllamaChatModel
-) : ChatClientPort {
+) : MyChatClientPort {
     override fun answer(chatDto: ChatDto): String {
         val history: List<Message> = chatMemory.get(chatDto.conversationId, 100)
 
         val guidToSystem = """
             Your name is {name}
-            {history} is histories of conversation between user and you.
+            Remeber {history} is the conversation history between user and you. 
             All of your replies should be summarized in 2-line without history.
             """.trimIndent()
         val systemPromptTemplate = SystemPromptTemplate(guidToSystem)

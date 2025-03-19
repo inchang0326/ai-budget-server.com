@@ -2,6 +2,7 @@ package com.teady.kp.adapter.primary.web
 
 import com.teady.kp.adapter.primary.web.port.WebChatAdapterPort
 import com.teady.kp.application.dto.ChatDto
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -15,5 +16,15 @@ class WebChatAdapter(
     @PostMapping("/question")
     fun ask(@RequestBody chatDto: ChatDto): Map<String, String> {
         return webChatAdapterPort.ask(chatDto)
+    }
+
+    @GetMapping("/rag-process")
+    fun prepare() {
+        webChatAdapterPort.prepare()
+    }
+
+    @PostMapping("/advanced-question")
+    fun askMore(@RequestBody chatDto: ChatDto): Map<String, String?> {
+        return webChatAdapterPort.askMore(chatDto)
     }
 }

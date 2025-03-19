@@ -13,9 +13,9 @@ spring:
         use_sql_comments: true  # sql 쿼리의 추가정보를 보여줍니다.
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/postgres
+    url: jdbc:postgresql://localhost:5432/postgres2
     username: steady
-    password:
+    password: awds4646592
   kafka:
     producer:
       bootstrap-servers: localhost:9092 # Kafka cluster 초기 연결 Port
@@ -23,9 +23,22 @@ spring:
     ollama:
       base-url: http://localhost:11434
       init:
-        pull-model-strategy: always
+        pull-model-strategy: when_missing
+        embedding:
+          additional-models:
+            - mxbai-embed-large
+            - nomic-embed-text
         timeout: 60s
         max-retries: 1
       chat:
         options:
           model: llama3.2
+          temperature: 0.5
+          top-p: 0.5
+    vectorstore:
+      pgvector:
+        index-type: HNSW
+        distance-type: COSINE_DISTANCE
+        dimensions: 1536
+        batching-strategy: TOKEN_COUNT # Optional: Controls how documents are batched for embedding
+        max-document-batch-size: 10000 # Optional: Maximum number of documents per batch
