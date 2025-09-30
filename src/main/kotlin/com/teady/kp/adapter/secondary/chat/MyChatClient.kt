@@ -12,7 +12,7 @@ import org.springframework.ai.ollama.OllamaChatModel
 import org.springframework.stereotype.Component
 
 @Component
-class MyMyChatClient(
+class MyChatClient(
     private val chatMemory: ChatMemory,
     private val ollamaChatModel: OllamaChatModel
 ) : MyChatClientPort {

@@ -1,4 +1,7 @@
 server:
+  devtools:
+    restart:
+      enabled: false
   port: 8080
 
 spring:
@@ -16,6 +19,14 @@ spring:
     url: jdbc:postgresql://localhost:5432/postgres2
     username: steady
     password: awds4646592
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 10
+      idle-timeout: 30000
+      max-lifetime: 1800000
+      pool-name: HikariPool-1
+      keepalive-time: 30000 # 30초마다 keep-alive 실행
+      validation-timeout: 5000 # 5초 내에 커넥션 검증
   kafka:
     producer:
       bootstrap-servers: localhost:9092 # Kafka cluster 초기 연결 Port
@@ -39,6 +50,6 @@ spring:
       pgvector:
         index-type: HNSW
         distance-type: COSINE_DISTANCE
-        dimensions: 1536
+        dimensions: 1024
         batching-strategy: TOKEN_COUNT # Optional: Controls how documents are batched for embedding
         max-document-batch-size: 10000 # Optional: Maximum number of documents per batch

@@ -13,11 +13,10 @@ import org.springframework.ai.reader.pdf.PagePdfDocumentReader
 import org.springframework.ai.reader.pdf.config.PdfDocumentReaderConfig
 import org.springframework.ai.transformer.splitter.TokenTextSplitter
 import org.springframework.ai.vectorstore.VectorStore
-import org.springframework.core.io.FileUrlResource
+import org.springframework.core.io.ClassPathResource
 import org.springframework.core.io.Resource
 import org.springframework.stereotype.Service
 import java.net.MalformedURLException
-import java.net.URL
 
 @Slf4j
 @RequiredArgsConstructor
@@ -33,7 +32,7 @@ class MyRAGClient (
 
     @Throws(MalformedURLException::class)
     override fun processedRAG() {
-        val pdfResource: Resource = FileUrlResource(URL("File-URL"))
+        val pdfResource: Resource = ClassPathResource("static/spring-boot-reference.pdf")
         // Spring AI utility class to read a PDF file page by page
         // Extract
         val pdfReader = PagePdfDocumentReader(
