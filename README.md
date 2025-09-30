@@ -14,13 +14,13 @@
   - Logging: Logback
   - Monitoring: Spring Actuator + Prometheus + Grafana
   - API Docs: Spring REST Docs
-- DBMS: PosgreSQL(with pgvector)
-
-## Architecture
-<img width="1000" height="600" alt="image" src="https://github.com/user-attachments/assets/fb2cc60e-8b4d-46da-9f06-185415f16fa4" />
+- DBMS: PostgreSQL(with pgvector)
 
 ## Features
 - Authentication/Authorization
 - CRUD for budget transactions
 - External OpenAPI integration
 - AI Investment Recommendation
+
+## Architecture
+<img width="1000" height="600" alt="image" src="https://github.com/user-attachments/assets/fb2cc60e-8b4d-46da-9f06-185415f16fa4" />
