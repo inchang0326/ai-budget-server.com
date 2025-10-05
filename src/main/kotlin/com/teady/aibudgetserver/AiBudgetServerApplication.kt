@@ -4,10 +4,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = ["com.teady.aibudgetserver"])
 @EnableJpaAuditing
-class KpApplication
+class AiBudgetServerApplication
 
 fun main(args: Array<String>) {
-    runApplication<KpApplication>(*args)
+    runApplication<AiBudgetServerApplication>(*args)
 }
