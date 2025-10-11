@@ -1,6 +1,6 @@
-package com.teady.aibudgetserver.adapter.secondary.jpa
+package com.teady.aibudgetserver.adapter.secondary.jpa.board
 
-import com.teady.aibudgetserver.adapter.secondary.jpa.port.BoardRepositoryPort
+import com.teady.aibudgetserver.adapter.secondary.jpa.board.port.BoardRepositoryPort
 import com.teady.aibudgetserver.domain.board.entity.Board
 import org.springframework.stereotype.Repository
 

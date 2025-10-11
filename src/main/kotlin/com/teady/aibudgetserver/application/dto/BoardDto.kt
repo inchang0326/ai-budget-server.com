@@ -2,7 +2,13 @@ package com.teady.aibudgetserver.application.dto
 
 import com.teady.aibudgetserver.domain.board.entity.Board
 
-data class BoardDto(val uuid : Long, val author : String, val contents : String, val emotion : String, val createdAt : String?) {
+data class BoardDto(
+    val uuid: Long,
+    val author: String,
+    val contents: String,
+    val emotion: String,
+    val createdAt: String?
+) {
     fun toEntity(): Board = Board(author = author, contents = contents, emotion = emotion)
 
     companion object {

@@ -2,7 +2,7 @@ package com.teady.aibudgetserver.application.usecase
 
 import com.teady.aibudgetserver.application.dto.BoardDto
 import com.teady.aibudgetserver.adapter.primary.web.port.WebBoardAdapterPort
-import com.teady.aibudgetserver.adapter.secondary.jpa.port.BoardRepositoryPort
+import com.teady.aibudgetserver.adapter.secondary.jpa.board.port.BoardRepositoryPort
 import com.teady.aibudgetserver.adapter.secondary.kafka.port.KafkaClientPort
 import com.teady.aibudgetserver.domain.board.entity.Board
 import com.teady.aibudgetserver.domain.board.executor.BoardExecutor

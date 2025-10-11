@@ -16,25 +16,35 @@ import java.time.format.DateTimeFormatter
 @Table(name = "board")
 @Entity
 @EntityListeners(AuditingEntityListener::class)
-class Board (
+class Board(
     author: String,
     contents: String,
     emotion: String
-    ) {
+) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val boardId : Long = 0
+    var boardId: Long = 0
+        protected set
+
     @Column
-    val author : String = author
+    var author: String = author
+        protected set
+
     @Column
-    val contents : String = contents
+    var contents: String = contents
+        protected set
+
     @Column
-    val emotion : String = emotion
+    var emotion: String = emotion
+        protected set
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
-    var createdAt : String = DateTimeFormatter.ofPattern("yyyyMMddHHmmss").format(LocalDateTime.now())
+    var createdAt: String = DateTimeFormatter.ofPattern("yyyyMMddHHmmss").format(LocalDateTime.now())
+        protected set
+
     @LastModifiedDate
     @Column(nullable = false)
-    var updatedAt : String = DateTimeFormatter.ofPattern("yyyyMMddHHmmss").format(LocalDateTime.now())
+    var updatedAt: String = DateTimeFormatter.ofPattern("yyyyMMddHHmmss").format(LocalDateTime.now())
+        protected set
 }

@@ -1,4 +1,4 @@
-package com.teady.aibudgetserver.adapter.secondary.jpa.port
+package com.teady.aibudgetserver.adapter.secondary.jpa.board.port
 
 import com.teady.aibudgetserver.domain.board.entity.Board
 
