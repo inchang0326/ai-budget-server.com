@@ -25,37 +25,56 @@ class BudgetUseCase(
         page: Int,
         limit: Int
     ): Page<TransactionDto> {
-        transactionExecutor.preExecute();
-
         val pageable: Pageable = PageRequest.of(
             page - 1,
             limit,
             Sort.by(Sort.Direction.DESC, "id.timestamp")
         )
 
-        val sDate: LocalDate = YearMonth.of(year, month).atDay(1)
-        val startTime: String = String.format("%04d%02d%02d000000000", sDate.year, sDate.monthValue, sDate.dayOfMonth)
-
-        val eDate: LocalDate = sDate.plusMonths(1)
-        val endTime: String = String.format("%04d%02d%02d000000000", eDate.year, eDate.monthValue, eDate.dayOfMonth)
-
-        return budgetRepositoryPort.findAllByUserIdAndPeriodWithPaging(userId, startTime, endTime, pageable)
-            .map { TransactionDto.fromEntity(it) }
+        return executeTransactions(
+            year,
+            month
+        ) { startTime, endTime ->
+            budgetRepositoryPort.findAllByUserIdAndPeriodWithPaging(
+                userId,
+                startTime,
+                endTime,
+                pageable
+            )
+        }.map { TransactionDto.fromEntity(it) }
     }
+
     override fun transactions(userId: String, year: Int, month: Int): List<TransactionDto> {
-        transactionExecutor.preExecute();
-
-        val sDate: LocalDate = YearMonth.of(year, month).atDay(1)
-        val startTime: String = String.format("%04d%02d%02d000000000", sDate.year, sDate.monthValue, sDate.dayOfMonth)
-
-        val eDate: LocalDate = sDate.plusMonths(1)
-        val endTime: String = String.format("%04d%02d%02d000000000", eDate.year, eDate.monthValue, eDate.dayOfMonth)
-
-        return budgetRepositoryPort.findAllByUserIdAndPeriod(userId, startTime, endTime)
-            .map { TransactionDto.fromEntity(it) }
+        return executeTransactions(
+            year,
+            month
+        ) { startTime, endTime ->
+            budgetRepositoryPort.findAllByUserIdAndPeriod(
+                userId,
+                startTime,
+                endTime
+            )
+        }.map { TransactionDto.fromEntity(it) }
     }
 
     override fun transactionsCount(userId: String, year: Int, month: Int): Long {
+        return executeTransactions(
+            year,
+            month
+        ) { startTime, endTime ->
+            budgetRepositoryPort.findAllCountByUserIdAndPeriod(
+                userId,
+                startTime,
+                endTime
+            )
+        }
+    }
+
+    private fun <T> executeTransactions(
+        year: Int,
+        month: Int,
+        transactions: (startTime: String, endTime: String) -> T
+    ): T {
         transactionExecutor.preExecute();
 
         val sDate: LocalDate = YearMonth.of(year, month).atDay(1)
@@ -64,6 +83,6 @@ class BudgetUseCase(
         val eDate: LocalDate = sDate.plusMonths(1)
         val endTime: String = String.format("%04d%02d%02d000000000", eDate.year, eDate.monthValue, eDate.dayOfMonth)
 
-        return budgetRepositoryPort.findAllCountByUserIdAndPeriod(userId, startTime, endTime)
+        return transactions(startTime, endTime)
     }
 }

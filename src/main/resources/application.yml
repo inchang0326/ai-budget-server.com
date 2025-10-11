@@ -17,8 +17,8 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/postgres2
-    username: steady
-    password: awds4646592
+    username:
+    password:
     hikari:
       minimum-idle: 5
       maximum-pool-size: 10

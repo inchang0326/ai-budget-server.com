@@ -1,10 +1,7 @@
 package com.teady.aibudgetserver.adapter.primary.web
 
-import ApiResponse
 import PaginatedResponse
 import com.teady.aibudgetserver.adapter.primary.web.port.WebBudgetAdapterPort
-import com.teady.aibudgetserver.application.dto.TransactionDto
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
