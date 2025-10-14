@@ -18,7 +18,7 @@ fun main(args: Array<String>) {
 }
 
 @Component
-@Profile("dev")
+@Profile("local")
 class FlywayCleanupOnShutdown(
     private val dataSource: DataSource
 ) {

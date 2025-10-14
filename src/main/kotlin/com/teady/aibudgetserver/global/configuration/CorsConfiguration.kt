@@ -1,4 +1,4 @@
-package com.teady.aibudgetserver.configuration
+package com.teady.aibudgetserver.global.configuration
 
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.servlet.config.annotation.CorsRegistry

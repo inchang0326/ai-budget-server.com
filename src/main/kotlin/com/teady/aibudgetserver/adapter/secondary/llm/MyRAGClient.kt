@@ -1,6 +1,6 @@
-package com.teady.aibudgetserver.adapter.secondary.chat
+package com.teady.aibudgetserver.adapter.secondary.llm
 
-import com.teady.aibudgetserver.adapter.secondary.chat.port.MyRAGClientPort
+import com.teady.aibudgetserver.adapter.secondary.llm.port.MyRAGClientPort
 import com.teady.aibudgetserver.application.dto.ChatDto
 import lombok.RequiredArgsConstructor
 import lombok.extern.slf4j.Slf4j

@@ -1,4 +1,4 @@
-package com.teady.aibudgetserver.adapter.secondary.chat
+package com.teady.aibudgetserver.adapter.secondary.llm
 
 import org.springframework.ai.chat.memory.ChatMemory
 import org.springframework.ai.chat.memory.InMemoryChatMemory

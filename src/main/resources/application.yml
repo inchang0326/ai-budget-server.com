@@ -1,24 +1,27 @@
+# 공통
+spring:
+  application:
+    name: ai-budget-server
+  profiles:
+    active: local
+
+---
+# local
 server:
-  devtools:
-    restart:
-      enabled: false
   port: 8080
 
 spring:
-  jpa:
-    hibernate:
-      ddl-auto: none
-#    show-sql: true
-    properties:
-      hibernate:
-        diarect: org.hibernate.dialect.PostgreSQL10Dialect # 쿼리의 기준이 되는 데이터베이스 엔진을 설정합니다.
-        format_sql: true  # sql query formatting
-        use_sql_comments: true  # sql 쿼리의 추가정보를 보여줍니다.
+  config:
+    activate:
+      on-profile: local
+  devtools:
+    restart:
+      enabled: false
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/postgres2
-    username:
-    password:
+    username: steady
+    password: awds4646592
     hikari:
       minimum-idle: 5
       maximum-pool-size: 10
@@ -27,6 +30,15 @@ spring:
       pool-name: HikariPool-1
       keepalive-time: 30000 # 30초마다 keep-alive 실행
       validation-timeout: 5000 # 5초 내에 커넥션 검증
+  jpa:
+    hibernate:
+      ddl-auto: none
+#      show-sql: true
+    properties:
+      hibernate:
+        direct: org.hibernate.dialect.PostgresSQL10Dialect
+        format_sql: true
+        use_sql_comments: true
   flyway:
     enabled: true
     clean-disabled: false
@@ -59,3 +71,16 @@ spring:
         dimensions: 1024
         batching-strategy: TOKEN_COUNT # Optional: Controls how documents are batched for embedding
         max-document-batch-size: 10000 # Optional: Maximum number of documents per batch
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    tags:
+      application: ${spring.application.name}

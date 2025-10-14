@@ -1,6 +1,6 @@
-package com.teady.aibudgetserver.adapter.secondary.chat
+package com.teady.aibudgetserver.adapter.secondary.llm
 
-import com.teady.aibudgetserver.adapter.secondary.chat.port.MyChatClientPort
+import com.teady.aibudgetserver.adapter.secondary.llm.port.MyChatClientPort
 import com.teady.aibudgetserver.application.dto.ChatDto
 import org.springframework.ai.chat.memory.ChatMemory
 import org.springframework.ai.chat.messages.AssistantMessage

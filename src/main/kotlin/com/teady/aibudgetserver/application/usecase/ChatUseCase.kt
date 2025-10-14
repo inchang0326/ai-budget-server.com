@@ -1,8 +1,8 @@
 package com.teady.aibudgetserver.application.usecase
 
 import com.teady.aibudgetserver.adapter.primary.web.port.WebChatAdapterPort
-import com.teady.aibudgetserver.adapter.secondary.chat.port.MyChatClientPort
-import com.teady.aibudgetserver.adapter.secondary.chat.port.MyRAGClientPort
+import com.teady.aibudgetserver.adapter.secondary.llm.port.MyChatClientPort
+import com.teady.aibudgetserver.adapter.secondary.llm.port.MyRAGClientPort
 import com.teady.aibudgetserver.application.dto.ChatDto
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory

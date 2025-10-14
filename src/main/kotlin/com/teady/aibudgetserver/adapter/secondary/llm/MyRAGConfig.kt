@@ -1,4 +1,4 @@
-package com.teady.aibudgetserver.adapter.secondary.chat
+package com.teady.aibudgetserver.adapter.secondary.llm
 
 import org.springframework.ai.chat.client.ChatClient
 import org.springframework.ai.chat.client.advisor.RetrievalAugmentationAdvisor

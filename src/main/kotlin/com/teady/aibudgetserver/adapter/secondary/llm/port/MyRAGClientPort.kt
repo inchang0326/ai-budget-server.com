@@ -1,4 +1,4 @@
-package com.teady.aibudgetserver.adapter.secondary.chat.port
+package com.teady.aibudgetserver.adapter.secondary.llm.port
 
 import com.teady.aibudgetserver.application.dto.ChatDto
 
