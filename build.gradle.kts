@@ -4,9 +4,9 @@ plugins {
     id("org.springframework.boot") version "3.2.3"
     id("io.spring.dependency-management") version "1.1.3"
     id("org.asciidoctor.jvm.convert") version "3.3.2"
-    kotlin("jvm") version "1.8.22"
-    kotlin("plugin.spring") version "1.8.22"
-    kotlin("plugin.jpa") version "1.8.22"
+    kotlin("jvm") version "1.9.22"
+    kotlin("plugin.spring") version "1.9.22"
+    kotlin("plugin.jpa") version "1.9.22"
 }
 
 group = "com.teady"
@@ -32,34 +32,42 @@ val asciidoctorExt: Configuration by configurations.creating
 val snippetsDir by extra { file("build/generated-snippets") }
 
 dependencies {
+    // Spring Boot Core
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
+    // Development
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
 
+    // AOP
     implementation("org.springframework.boot:spring-boot-starter-aop")
 
+    // Database
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.flywaydb:flyway-core")
     runtimeOnly("org.postgresql:postgresql")
-    runtimeOnly("org.flywaydb:flyway-database-postgresql")
 
+    // Monitoring
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("io.micrometer:micrometer-registry-prometheus")
 
+    // Kafka
     implementation("org.springframework.kafka:spring-kafka")
 
-    // [AI] Ollama LLM & Embedding
+    // AI
     implementation("org.springframework.ai:spring-ai-ollama-spring-boot-starter:1.0.0-M4")
-    // [AI] Vector Store
     implementation("org.springframework.ai:spring-ai-pgvector-store-spring-boot-starter:1.0.0-M4")
     implementation("org.springframework.ai:spring-ai-pdf-document-reader:1.0.0-M4")
 
+    // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
+
+    // REST Docs
     asciidoctorExt("org.springframework.restdocs:spring-restdocs-asciidoctor")
 }
 
@@ -70,25 +78,34 @@ tasks.withType<KotlinCompile> {
     }
 }
 
-tasks.withType<Test> {
+tasks.test {
     useJUnitPlatform()
     outputs.dir(snippetsDir)
 }
 
 tasks.asciidoctor {
-    dependsOn(tasks.test)
     inputs.dir(snippetsDir)
     configurations(asciidoctorExt.name)
-    baseDirFollowsSourceFile()
+    dependsOn(tasks.test)
 
-    doLast {
-        copy {
-            from("build/docs/asciidoc")
-            into("src/main/resources/static/docs")
+    doFirst {
+        delete {
+            file("src/main/resources/static/docs")
         }
     }
 }
 
-tasks.build {
+tasks.register<Copy>("copyHTML") {
     dependsOn(tasks.asciidoctor)
+    from(file("build/docs/asciidoc"))
+    into(file("src/main/resources/static/docs"))
+}
+
+tasks.build {
+    dependsOn(tasks.getByName("copyHTML"))
+}
+
+tasks.bootJar {
+    dependsOn(tasks.asciidoctor)
+    dependsOn(tasks.getByName("copyHTML"))
 }

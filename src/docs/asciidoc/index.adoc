@@ -1,0 +1,30 @@
+= [Budget] transactions API 문서
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 3
+:sectlinks:
+
+== 개요
+이 문서는 [Budget] transactions API의 사용법을 설명합니다.
+
+== transactions API
+
+=== 가계부 거래 내역 조회
+사용자 ID, year, month 통해 가계부 해당년월 거래 내역 정보를 조회합니다.
+
+==== HTTP 요청
+include::{snippets}/transactions/http-request.adoc[]
+
+==== 경로 파라미터
+include::{snippets}/transactions/path-parameters.adoc[]
+
+==== HTTP 응답
+include::{snippets}/transactions/http-response.adoc[]
+
+==== 응답 필드
+include::{snippets}/transactions/response-fields.adoc[]
+
+==== cURL 예제
+include::{snippets}/transactions/curl-request.adoc[]
