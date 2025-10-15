@@ -1,22 +1,33 @@
+# Prometheus의 전역 설정
 global:
+  # 메트릭을 수집하는 주기 (15초마다 스크래핑)
   scrape_interval: 15s
-  evaluation_interval: 15s
+  # 스크래핑 타임아웃 시간 (10초 이내에 응답 없으면 실패 처리)
+  scrape_timeout: 10s
+  # 외부 시스템에 전달할 때 붙일 레이블
+  external_labels:
+    monitor: 'spring-boot-monitor'
 
+# Prometheus 자체 메트릭 수집 설정
 scrape_configs:
-  # Spring Boot Actuator 메트릭 수집
-  - job_name: 'spring-boot-app'
-    metrics_path: '/actuator/prometheus'
-    scrape_interval: 5s
-    static_configs:
-      # Mac/Windows Docker Desktop
-      - targets: ['host.docker.internal:8080']
-        # Linux의 경우 아래 주석 해제하고 위 라인 주석 처리
-        # - targets: ['172.17.0.1:8080']
-        labels:
-          application: 'demo-app'
-          environment: 'local'
-
-  # Prometheus 자체 메트릭
+  # Job 이름: Prometheus 자신을 모니터링
   - job_name: 'prometheus'
+    # 메트릭을 가져올 엔드포인트 설정
     static_configs:
+      # localhost:9090에서 자신의 메트릭 수집
       - targets: ['localhost:9090']
+
+  # Job 이름: Spring Boot 애플리케이션 모니터링
+  - job_name: 'spring-boot-app'
+    # Spring Boot Actuator의 Prometheus 엔드포인트 경로
+    metrics_path: '/actuator/prometheus'
+    # 메트릭을 수집할 대상 서버들
+    static_configs:
+      # host.docker.internal은 Docker 컨테이너에서 호스트 머신에 접근하는 특수 DNS
+      # 만약 Spring Boot 앱도 Docker에서 실행된다면 서비스명 사용
+      # 예: - targets: ['spring-app:8080']
+      - targets: ['host.docker.internal:8080']
+        # 이 타겟에 추가할 커스텀 레이블
+        labels:
+          application: 'my-spring-app'  # 애플리케이션 이름
+          environment: 'dev'             # 환경 (dev, staging, prod 등)

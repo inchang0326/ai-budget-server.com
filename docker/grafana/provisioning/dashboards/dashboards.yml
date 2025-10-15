@@ -1,0 +1,24 @@
+# API 버전
+apiVersion: 1
+
+# 프로비저닝할 대시보드 설정 목록
+providers:
+  # 프로바이더 이름 (내부 식별용)
+  - name: 'Spring Boot Dashboards'
+    # 조직 ID
+    orgId: 1
+    # 대시보드를 저장할 폴더 이름 (Grafana UI에서 보이는 폴더)
+    folder: 'Spring Boot'
+    # 대시보드 타입 (file = 파일 시스템에서 로드)
+    type: file
+    # 대시보드 수정 가능 여부
+    disableDeletion: false
+    # UI에서 업데이트 가능 여부
+    updateIntervalSeconds: 10
+    # 동일한 uid의 대시보드가 있을 경우 덮어쓰기 허용
+    allowUiUpdates: true
+    options:
+      # JSON 파일들이 있는 경로
+      path: /etc/grafana/provisioning/dashboards
+      # 하위 폴더도 검색
+      foldersFromFilesStructure: true
