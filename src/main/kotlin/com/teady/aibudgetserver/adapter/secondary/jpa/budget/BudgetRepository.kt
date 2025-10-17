@@ -27,4 +27,8 @@ class BudgetRepository(private val jpaTransactionRepository: JpaTransactionRepos
 
     override fun findAllCountByUserIdAndPeriod(userId: String, startTime: String, endTime: String): Long =
         jpaTransactionRepository.findAllCountByUserIdAndPeriod(userId, startTime, endTime)
+
+    override fun deleteByUserIdAndTimestamp(userId: String, timestamp: String) {
+        jpaTransactionRepository.deleteByUserIdAndTimestamp(userId, timestamp)
+    }
 }

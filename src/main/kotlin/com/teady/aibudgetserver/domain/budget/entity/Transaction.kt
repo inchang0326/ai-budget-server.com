@@ -71,4 +71,5 @@ data class TransactionId(
 enum class TransactionType {
     income,
     expense,
+    none,
 }

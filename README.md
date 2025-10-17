@@ -6,7 +6,7 @@
 - Framework: Spring Boot
   - API Gateway&Load Balancer: Spring Cloud Gateway
   - Service Registry&Discovery: Spring Cloud Eureka
-  - Microservices: Spring MVC/Webflux
+  - Microservices: Spring Web/Webflux
     - Security: Spring Security
     - AI: Spring AI
     - Data interface: Spring Data JPA/Redis

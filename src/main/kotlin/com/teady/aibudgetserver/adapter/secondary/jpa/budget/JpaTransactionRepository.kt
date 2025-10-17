@@ -4,6 +4,7 @@ import com.teady.aibudgetserver.domain.budget.entity.Transactions
 import com.teady.aibudgetserver.domain.budget.entity.TransactionId
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.PagingAndSortingRepository
 import org.springframework.data.repository.query.Param
@@ -56,4 +57,12 @@ interface JpaTransactionRepository : PagingAndSortingRepository<Transactions, Tr
         @Param("startTime") startTime: String,
         @Param("endTime") endTime: String,
     ): Long
+
+
+    @Modifying
+    @Query("DELETE FROM Transactions t WHERE t.id.userId = :userId AND t.id.timestamp = :timestamp")
+    fun deleteByUserIdAndTimestamp(
+        @Param("userId") userId: String,
+        @Param("timestamp") timestamp: String
+    )
 }

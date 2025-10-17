@@ -50,7 +50,7 @@ class MdcLoggingFilter : OncePerRequestFilter() {
     }
 
     private fun extractUserId(request: HttpServletRequest): String {
-        request.getHeader("X-User-Id")?.let { return it }
+        request.getHeader("X-USER-ID")?.let { return it }
         request.getParameter("userId")?.let { return it }
         return "anonymous"
     }

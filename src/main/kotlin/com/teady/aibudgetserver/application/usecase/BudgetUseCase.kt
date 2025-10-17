@@ -4,11 +4,14 @@ import com.teady.aibudgetserver.adapter.primary.web.port.WebBudgetAdapterPort
 import com.teady.aibudgetserver.adapter.secondary.jpa.budget.port.BudgetRepositoryPort
 import com.teady.aibudgetserver.application.dto.TransactionDto
 import com.teady.aibudgetserver.domain.budget.executor.TransactionExecutor
+import com.teady.aibudgetserver.global.util.toTimestamp
+import com.teady.aibudgetserver.global.util.toUserId
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
 import java.time.YearMonth
 
@@ -68,6 +71,13 @@ class BudgetUseCase(
                 endTime
             )
         }
+    }
+
+    @Transactional(rollbackFor = [Throwable::class])
+    override fun transactions(transactionDto: TransactionDto) {
+        transactionExecutor.preExecute()
+        transactionDto.id ?: return
+        budgetRepositoryPort.deleteByUserIdAndTimestamp(transactionDto.id.toUserId(), transactionDto.id.toTimestamp())
     }
 
     private fun <T> executeTransactions(

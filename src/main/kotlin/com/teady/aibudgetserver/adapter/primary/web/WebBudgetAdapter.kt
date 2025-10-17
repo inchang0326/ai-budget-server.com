@@ -2,7 +2,11 @@ package com.teady.aibudgetserver.adapter.primary.web
 
 import PaginatedResponse
 import com.teady.aibudgetserver.adapter.primary.web.port.WebBudgetAdapterPort
+import com.teady.aibudgetserver.application.dto.TransactionDto
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -16,7 +20,7 @@ class WebBudgetAdapter(
 ) {
     @GetMapping("/transactions")
     fun transactions(
-        @RequestParam userId: String,
+        @RequestHeader("X-USER-ID") userId: String,
         @RequestParam(required = false) year: Int,
         @RequestParam(required = false) month: Int,
     ) = PaginatedResponse.of(
@@ -29,4 +33,8 @@ class WebBudgetAdapter(
         limit = 10,
         totalCount = 0
     ).toSuccessResponse()
+
+    @PostMapping("/transactions")
+    fun transactions(@RequestBody transactionDto: TransactionDto) =
+        webBudgetAdapterPort.transactions(transactionDto).toSuccessResponse()
 }
