@@ -31,4 +31,8 @@ class BudgetRepository(private val jpaTransactionRepository: JpaTransactionRepos
     override fun deleteByUserIdAndTimestamp(userId: String, timestamp: String) {
         jpaTransactionRepository.deleteByUserIdAndTimestamp(userId, timestamp)
     }
+
+    override fun deleteAllByUserId(userId: String) {
+        jpaTransactionRepository.deleteAllByUserId(userId)
+    }
 }

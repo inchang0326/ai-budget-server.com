@@ -10,4 +10,5 @@ interface BudgetRepositoryPort {
     fun findAllByUserIdAndPeriod(userId: String, startTime: String, endTime: String): List<Transactions>
     fun findAllCountByUserIdAndPeriod(userId: String, startTime: String, endTime: String): Long
     fun deleteByUserIdAndTimestamp(userId: String, timestamp: String)
+    fun deleteAllByUserId(userId: String)
 }

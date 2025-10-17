@@ -80,6 +80,11 @@ class BudgetUseCase(
         budgetRepositoryPort.deleteByUserIdAndTimestamp(transactionDto.id.toUserId(), transactionDto.id.toTimestamp())
     }
 
+    @Transactional(rollbackFor = [Throwable::class])
+    override fun transactionsDeleteAll(userId: String) {
+        transactionExecutor.preExecute()
+        budgetRepositoryPort.deleteAllByUserId(userId)
+    }
     private fun <T> executeTransactions(
         year: Int,
         month: Int,

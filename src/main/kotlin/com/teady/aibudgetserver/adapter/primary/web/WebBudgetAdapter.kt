@@ -37,4 +37,8 @@ class WebBudgetAdapter(
     @PostMapping("/transactions")
     fun transactions(@RequestBody transactionDto: TransactionDto) =
         webBudgetAdapterPort.transactions(transactionDto).toSuccessResponse()
+
+    @PostMapping("/transactions/delete-all")
+    fun transactionsDeleteAll(@RequestHeader("X-USER-ID") userId: String) =
+        webBudgetAdapterPort.transactionsDeleteAll(userId).toSuccessResponse()
 }

@@ -65,4 +65,10 @@ interface JpaTransactionRepository : PagingAndSortingRepository<Transactions, Tr
         @Param("userId") userId: String,
         @Param("timestamp") timestamp: String
     )
+
+    @Modifying
+    @Query("DELETE FROM Transactions t WHERE t.id.userId = :userId")
+    fun deleteAllByUserId(
+        @Param("userId") userId: String
+    )
 }
