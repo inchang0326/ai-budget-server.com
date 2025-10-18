@@ -52,6 +52,13 @@ class Transactions(
     @Column(name="updated_time", nullable = false)
     var updatedAt: LocalDateTime? = null
         protected set
+
+    fun update(type: TransactionType, amount: Double, category: String, description: String) {
+        this.type = type
+        this.amount = amount
+        this.category = category
+        this.description = description
+    }
 }
 
 @Embeddable

@@ -1,10 +1,12 @@
 package com.teady.aibudgetserver.adapter.secondary.jpa.budget
 
 import com.teady.aibudgetserver.adapter.secondary.jpa.budget.port.BudgetRepositoryPort
+import com.teady.aibudgetserver.domain.budget.entity.TransactionId
 import com.teady.aibudgetserver.domain.budget.entity.Transactions
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Repository
+import java.util.*
 
 @Repository
 class BudgetRepository(private val jpaTransactionRepository: JpaTransactionRepository) : BudgetRepositoryPort {
@@ -28,7 +30,9 @@ class BudgetRepository(private val jpaTransactionRepository: JpaTransactionRepos
     override fun selectAllCountByUserIdAndPeriod(userId: String, startTime: String, endTime: String): Long =
         jpaTransactionRepository.selectAllCountByUserIdAndPeriod(userId, startTime, endTime)
 
-    override fun save(transactions: Transactions) = jpaTransactionRepository.save(transactions)
+    override fun selectById(transactionId: TransactionId): Optional<Transactions> = jpaTransactionRepository.findById(transactionId)
+
+    override fun insertTransaction(transactions: Transactions) = jpaTransactionRepository.save(transactions)
 
     override fun deleteByUserIdAndTimestamp(userId: String, timestamp: String) =
         jpaTransactionRepository.deleteByUserIdAndTimestamp(userId, timestamp)

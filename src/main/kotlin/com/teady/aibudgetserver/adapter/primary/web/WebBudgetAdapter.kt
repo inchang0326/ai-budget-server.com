@@ -39,13 +39,12 @@ class WebBudgetAdapter(
     fun transactions(
         @RequestHeader("X-USER-ID") userId: String,
         @RequestBody transactionDto: TransactionDto
-    ) = webBudgetAdapterPort.transactions(transactionDto.toEntity(userId))
+    ) = webBudgetAdapterPort.transactions(userId, transactionDto)
 
     @PutMapping("/transactions")
-    fun transactionsUpdate(
-        @RequestHeader("X-USER-ID") userId: String,
+    fun transactions(
         @RequestBody transactionDto: TransactionDto
-    ) = webBudgetAdapterPort.transactionsUpdate(transactionDto.toEntity(userId))
+    ) = webBudgetAdapterPort.transactions(transactionDto)
 
     @PostMapping("/transactions/delete")
     fun transactionsDelete(@RequestBody transactionDto: TransactionDto) =

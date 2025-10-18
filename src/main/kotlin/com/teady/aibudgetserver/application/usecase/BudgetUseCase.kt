@@ -3,10 +3,10 @@ package com.teady.aibudgetserver.application.usecase
 import com.teady.aibudgetserver.adapter.primary.web.port.WebBudgetAdapterPort
 import com.teady.aibudgetserver.adapter.secondary.jpa.budget.port.BudgetRepositoryPort
 import com.teady.aibudgetserver.application.dto.TransactionDto
-import com.teady.aibudgetserver.domain.budget.entity.Transactions
+import com.teady.aibudgetserver.application.dto.toTimestamp
+import com.teady.aibudgetserver.application.dto.toUserId
+import com.teady.aibudgetserver.domain.budget.entity.TransactionId
 import com.teady.aibudgetserver.domain.budget.executor.TransactionExecutor
-import com.teady.aibudgetserver.global.util.toTimestamp
-import com.teady.aibudgetserver.global.util.toUserId
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -75,15 +75,30 @@ class BudgetUseCase(
     }
 
     @Transactional(rollbackFor = [Throwable::class])
-    override fun transactions(transactions: Transactions) {
+    override fun transactions(userId: String, transactionDto: TransactionDto) {
         transactionExecutor.preExecute()
-        budgetRepositoryPort.save(transactions)
+        budgetRepositoryPort.insertTransaction(transactionDto.toEntity(userId))
     }
 
     @Transactional(rollbackFor = [Throwable::class])
-    override fun transactionsUpdate(transactions: Transactions) {
+    override fun transactions(transactionDto: TransactionDto) {
         transactionExecutor.preExecute()
-        budgetRepositoryPort.save(transactions)
+        transactionDto.id ?: return
+        transactionDto.type ?: return
+        transactionDto.amount ?: return
+        transactionDto.category ?: return
+        transactionDto.description ?: return
+        val transactionId =
+            TransactionId(userId = transactionDto.id.toUserId(), timestamp = transactionDto.id.toTimestamp())
+        val transaction = budgetRepositoryPort.selectById(transactionId)
+        transaction.ifPresent { t ->
+            t.update(
+                type = transactionDto.type,
+                amount = transactionDto.amount,
+                category = transactionDto.category,
+                description = transactionDto.description
+            )
+        }
     }
 
     @Transactional(rollbackFor = [Throwable::class])
