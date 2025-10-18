@@ -3,7 +3,9 @@ package com.teady.aibudgetserver.application.dto
 import com.teady.aibudgetserver.domain.budget.entity.Transactions
 import com.teady.aibudgetserver.domain.budget.entity.TransactionType
 import com.teady.aibudgetserver.global.util.toId
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
 data class TransactionDto(
@@ -15,15 +17,20 @@ data class TransactionDto(
     val date: String?,
     val userId: String?,
 ) {
-    fun toEntity(): Transactions =
-        Transactions(
-            userId = userId ?: "",
-            timestamp = date ?: "",
+    fun toEntity(userId: String): Transactions {
+
+        val localDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+        val localDateTime = localDate.atTime(LocalTime.now())
+
+        return Transactions(
+            userId = userId,
+            timestamp = localDateTime.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS")),
             type = type ?: TransactionType.none,
             amount = amount ?: 0.0,
             category = category ?: "",
             description = description ?: ""
         )
+    }
 
     companion object {
         fun fromEntity(t: Transactions): TransactionDto = TransactionDto(

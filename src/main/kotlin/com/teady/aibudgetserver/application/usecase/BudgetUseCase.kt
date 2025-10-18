@@ -3,6 +3,7 @@ package com.teady.aibudgetserver.application.usecase
 import com.teady.aibudgetserver.adapter.primary.web.port.WebBudgetAdapterPort
 import com.teady.aibudgetserver.adapter.secondary.jpa.budget.port.BudgetRepositoryPort
 import com.teady.aibudgetserver.application.dto.TransactionDto
+import com.teady.aibudgetserver.domain.budget.entity.Transactions
 import com.teady.aibudgetserver.domain.budget.executor.TransactionExecutor
 import com.teady.aibudgetserver.global.util.toTimestamp
 import com.teady.aibudgetserver.global.util.toUserId
@@ -38,7 +39,7 @@ class BudgetUseCase(
             year,
             month
         ) { startTime, endTime ->
-            budgetRepositoryPort.findAllByUserIdAndPeriodWithPaging(
+            budgetRepositoryPort.selectAllByUserIdAndPeriodWithPaging(
                 userId,
                 startTime,
                 endTime,
@@ -52,7 +53,7 @@ class BudgetUseCase(
             year,
             month
         ) { startTime, endTime ->
-            budgetRepositoryPort.findAllByUserIdAndPeriod(
+            budgetRepositoryPort.selectAllByUserIdAndPeriod(
                 userId,
                 startTime,
                 endTime
@@ -65,7 +66,7 @@ class BudgetUseCase(
             year,
             month
         ) { startTime, endTime ->
-            budgetRepositoryPort.findAllCountByUserIdAndPeriod(
+            budgetRepositoryPort.selectAllCountByUserIdAndPeriod(
                 userId,
                 startTime,
                 endTime
@@ -74,7 +75,12 @@ class BudgetUseCase(
     }
 
     @Transactional(rollbackFor = [Throwable::class])
-    override fun transactions(transactionDto: TransactionDto) {
+    override fun transactions(transactions: Transactions) {
+        budgetRepositoryPort.save(transactions)
+    }
+
+    @Transactional(rollbackFor = [Throwable::class])
+    override fun transactionsDelete(transactionDto: TransactionDto) {
         transactionExecutor.preExecute()
         transactionDto.id ?: return
         budgetRepositoryPort.deleteByUserIdAndTimestamp(transactionDto.id.toUserId(), transactionDto.id.toTimestamp())
@@ -85,6 +91,7 @@ class BudgetUseCase(
         transactionExecutor.preExecute()
         budgetRepositoryPort.deleteAllByUserId(userId)
     }
+
     private fun <T> executeTransactions(
         year: Int,
         month: Int,

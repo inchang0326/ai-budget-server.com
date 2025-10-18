@@ -8,10 +8,10 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class BudgetRepository(private val jpaTransactionRepository: JpaTransactionRepository) : BudgetRepositoryPort {
-    override fun findAllByUserIdWithPaging(userId: String, pageable: Pageable): Page<Transactions> =
+    override fun selectAllByUserIdWithPaging(userId: String, pageable: Pageable): Page<Transactions> =
         jpaTransactionRepository.findAllByUserIdWithPaging(userId, pageable)
 
-    override fun findAllByUserIdAndPeriodWithPaging(
+    override fun selectAllByUserIdAndPeriodWithPaging(
         userId: String,
         startTime: String,
         endTime: String,
@@ -19,14 +19,16 @@ class BudgetRepository(private val jpaTransactionRepository: JpaTransactionRepos
     ): Page<Transactions> =
         jpaTransactionRepository.findAllByUserIdAndPeriodWithPaging(userId, startTime, endTime, pageable)
 
-    override fun findAllByUserIdAndPeriod(
+    override fun selectAllByUserIdAndPeriod(
         userId: String,
         startTime: String,
         endTime: String,
     ): List<Transactions> = jpaTransactionRepository.findAllByUserIdAndPeriod(userId, startTime, endTime)
 
-    override fun findAllCountByUserIdAndPeriod(userId: String, startTime: String, endTime: String): Long =
+    override fun selectAllCountByUserIdAndPeriod(userId: String, startTime: String, endTime: String): Long =
         jpaTransactionRepository.findAllCountByUserIdAndPeriod(userId, startTime, endTime)
+
+    override fun save(transactions: Transactions) = jpaTransactionRepository.save(transactions)
 
     override fun deleteByUserIdAndTimestamp(userId: String, timestamp: String) {
         jpaTransactionRepository.deleteByUserIdAndTimestamp(userId, timestamp)

@@ -12,7 +12,6 @@ import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.io.Serializable
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 @Table(name = "transactions")
 @Entity
@@ -51,7 +50,7 @@ class Transactions(
 
     @LastModifiedDate
     @Column(name="updated_time", nullable = false)
-    var updatedAt: String = DateTimeFormatter.ofPattern("yyyyMMddHHmmss").format(LocalDateTime.now())
+    var updatedAt: LocalDateTime? = null
         protected set
 }
 
