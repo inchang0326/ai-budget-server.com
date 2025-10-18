@@ -9,6 +9,7 @@ interface WebBudgetAdapterPort {
     fun transactions(userId: String, year: Int, month: Int): List<TransactionDto>
     fun transactionsCount(userId: String, year: Int, month: Int): Long
     fun transactions(transactions: Transactions)
+    fun transactionsUpdate(transactions: Transactions)
     fun transactionsDelete(transactionDto: TransactionDto)
     fun transactionsDeleteAll(userId: String)
 }

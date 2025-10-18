@@ -12,7 +12,7 @@ import org.springframework.data.repository.query.Param
 interface JpaTransactionRepository : JpaRepository<Transactions, TransactionId> {
 
     @Query("SELECT t FROM Transactions t WHERE t.id.userId = :userId")
-    fun findAllByUserIdWithPaging(@Param("userId") userId: String, pageable: Pageable): Page<Transactions>
+    fun selectAllByUserIdWithPaging(@Param("userId") userId: String, pageable: Pageable): Page<Transactions>
 
     @Query(
         """
@@ -22,7 +22,7 @@ interface JpaTransactionRepository : JpaRepository<Transactions, TransactionId> 
         AND t.id.timestamp < :endTime
         """
     )
-    fun findAllByUserIdAndPeriodWithPaging(
+    fun selectAllByUserIdAndPeriodWithPaging(
         @Param("userId") userId: String,
         @Param("startTime") startTime: String,
         @Param("endTime") endTime: String,
@@ -38,7 +38,7 @@ interface JpaTransactionRepository : JpaRepository<Transactions, TransactionId> 
         ORDER BY t.id.timestamp DESC
         """
     )
-    fun findAllByUserIdAndPeriod(
+    fun selectAllByUserIdAndPeriod(
         @Param("userId") userId: String,
         @Param("startTime") startTime: String,
         @Param("endTime") endTime: String,
@@ -52,7 +52,7 @@ interface JpaTransactionRepository : JpaRepository<Transactions, TransactionId> 
         AND t.id.timestamp < :endTime
         """
     )
-    fun findAllCountByUserIdAndPeriod(
+    fun selectAllCountByUserIdAndPeriod(
         @Param("userId") userId: String,
         @Param("startTime") startTime: String,
         @Param("endTime") endTime: String,

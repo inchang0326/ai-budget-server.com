@@ -5,6 +5,7 @@ import com.teady.aibudgetserver.adapter.primary.web.port.WebBudgetAdapterPort
 import com.teady.aibudgetserver.application.dto.TransactionDto
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
@@ -39,6 +40,12 @@ class WebBudgetAdapter(
         @RequestHeader("X-USER-ID") userId: String,
         @RequestBody transactionDto: TransactionDto
     ) = webBudgetAdapterPort.transactions(transactionDto.toEntity(userId))
+
+    @PutMapping("/transactions")
+    fun transactionsUpdate(
+        @RequestHeader("X-USER-ID") userId: String,
+        @RequestBody transactionDto: TransactionDto
+    ) = webBudgetAdapterPort.transactionsUpdate(transactionDto.toEntity(userId))
 
     @PostMapping("/transactions/delete")
     fun transactionsDelete(@RequestBody transactionDto: TransactionDto) =

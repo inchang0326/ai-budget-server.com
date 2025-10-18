@@ -76,6 +76,13 @@ class BudgetUseCase(
 
     @Transactional(rollbackFor = [Throwable::class])
     override fun transactions(transactions: Transactions) {
+        transactionExecutor.preExecute()
+        budgetRepositoryPort.save(transactions)
+    }
+
+    @Transactional(rollbackFor = [Throwable::class])
+    override fun transactionsUpdate(transactions: Transactions) {
+        transactionExecutor.preExecute()
         budgetRepositoryPort.save(transactions)
     }
 
