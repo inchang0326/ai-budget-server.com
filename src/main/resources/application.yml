@@ -2,8 +2,8 @@
 spring:
   application:
     name: ai-budget-server
-  profiles:
-    active: local
+#  profiles:
+#    active: local
 
 ---
 # local
@@ -20,8 +20,8 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/postgres2
-    username: steady
-    password: awds4646592
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     hikari:
       minimum-idle: 5
       maximum-pool-size: 10
