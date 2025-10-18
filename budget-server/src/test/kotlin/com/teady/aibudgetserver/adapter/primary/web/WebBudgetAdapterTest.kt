@@ -21,7 +21,7 @@ import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.request.RequestDocumentation.*
 import org.springframework.restdocs.payload.PayloadDocumentation.*
 
-@WebMvcTest(WebBudgetAdapter::class)
+@WebMvcTest(com.teady.budgetserver.adapter.primary.web.WebBudgetAdapter::class)
 @AutoConfigureRestDocs
 class WebBudgetAdapterTest {
 
