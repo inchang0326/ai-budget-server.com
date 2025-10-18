@@ -1,4 +1,4 @@
-HELP.md
+budget-service/HELP.md
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
@@ -36,8 +36,8 @@ out/
 ### VS Code ###
 .vscode/
 .DS_Store
-logs/
+budget-service/logs/
 *.log
 .DS_Store
-logs/
+budget-service/logs/
 *.log

@@ -1,7 +1,6 @@
 package com.teady.aibudgetserver.adapter.primary.web.port
 
 import com.teady.aibudgetserver.application.dto.TransactionDto
-import com.teady.aibudgetserver.domain.budget.entity.Transactions
 import org.springframework.data.domain.Page
 
 interface WebBudgetAdapterPort {
