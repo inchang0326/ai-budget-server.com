@@ -1,4 +1,4 @@
-package com.teady.aibudgetserver.adapter.primary.web
+package com.teady.budgetserver.adapter.primary.web
 
 import com.teady.budgetserver.application.dto.TransactionDto
 import com.teady.budgetserver.application.usecase.BudgetUseCase
@@ -21,7 +21,7 @@ import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.request.RequestDocumentation.*
 import org.springframework.restdocs.payload.PayloadDocumentation.*
 
-@WebMvcTest(com.teady.budgetserver.adapter.primary.web.WebBudgetAdapter::class)
+@WebMvcTest(WebBudgetAdapter::class)
 @AutoConfigureRestDocs
 class WebBudgetAdapterTest {
 
