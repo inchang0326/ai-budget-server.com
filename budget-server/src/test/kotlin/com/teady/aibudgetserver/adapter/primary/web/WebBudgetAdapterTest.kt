@@ -1,8 +1,8 @@
 package com.teady.aibudgetserver.adapter.primary.web
 
-import com.teady.aibudgetserver.application.dto.TransactionDto
-import com.teady.aibudgetserver.application.usecase.BudgetUseCase
-import com.teady.aibudgetserver.domain.budget.entity.TransactionType
+import com.teady.budgetserver.application.dto.TransactionDto
+import com.teady.budgetserver.application.usecase.BudgetUseCase
+import com.teady.budgetserver.domain.budget.entity.TransactionType
 import io.micrometer.core.instrument.MeterRegistry
 import org.junit.jupiter.api.Test
 
