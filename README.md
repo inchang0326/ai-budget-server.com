@@ -17,17 +17,17 @@
 - DBMS: PostgreSQL(with pgvector)
 
 ## Features
+- gateway-server
+  - API Gateway & Load Balancing
+- eureka-server
+  - Service Registry & Discovery
+- auth-server:
+  - Authentication/Authorization
 - budget-server:
   - Serving CRUD for budget transactions
   - Bank OpenAPI integration for synchronizing remote finance accounts budget transactions
 - ai-server:
   - LLM OpenAPI integration for AI based investment recommendation
-- auth-server:
-  - Authentication/Authorization
-- erueka-server
-  - Service Registry & Discovery
-- gateway-server
-  - API Gateway & Load Balancing
 
 ## Architecture
 <img width="1000" height="600" alt="image" src="https://github.com/user-attachments/assets/fb2cc60e-8b4d-46da-9f06-185415f16fa4" />
