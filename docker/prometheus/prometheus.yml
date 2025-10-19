@@ -17,17 +17,13 @@ scrape_configs:
       # localhost:9090에서 자신의 메트릭 수집
       - targets: ['localhost:9090']
 
-  # Job 이름: Spring Boot 애플리케이션 모니터링
-  - job_name: 'spring-boot-app'
-    # Spring Boot Actuator의 Prometheus 엔드포인트 경로
+  # Eureka 기반 Service Discovery 설정
+  - job_name: 'spring-micrometer'
     metrics_path: '/actuator/prometheus'
-    # 메트릭을 수집할 대상 서버들
-    static_configs:
-      # host.docker.internal은 Docker 컨테이너에서 호스트 머신에 접근하는 특수 DNS
-      # 만약 Spring Boot 앱도 Docker에서 실행된다면 서비스명 사용
-      # 예: - targets: ['spring-app:8080']
-      - targets: ['host.docker.internal:8080']
-        # 이 타겟에 추가할 커스텀 레이블
-        labels:
-          application: 'my-spring-app'  # 애플리케이션 이름
-          environment: 'dev'             # 환경 (dev, staging, prod 등)
+    # Eureka 서버 주소를 지정하여 등록된 서비스 목록을 가져옴
+    eureka_sd_configs:
+      - server: http://host.docker.internal:8761/eureka
+    relabel_configs:
+      # Eureka 메타데이터를 Prometheus 레이블로 변환
+      - source_labels: [__meta_eureka_app_name]
+        target_label: application

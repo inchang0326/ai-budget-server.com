@@ -35,6 +35,17 @@ subprojects {
     group = "com.teady"
     version = "0.0.1-SNAPSHOT"
 
+    plugins.withType<JavaPlugin> {
+        dependencies {
+            // Monitoring
+            "implementation"("org.springframework.boot:spring-boot-starter-actuator")
+            "implementation"("io.micrometer:micrometer-registry-prometheus")
+
+            // Test
+            "testImplementation"("org.springframework.boot:spring-boot-starter-test")
+        }
+    }
+
     extensions.configure<JavaPluginExtension> {
         sourceCompatibility = JavaVersion.VERSION_17
     }
