@@ -1,7 +1,7 @@
 # 공통
 spring:
   application:
-    name: ai-budget-server
+    name: budget-server
 #  profiles:
 #    active: local
 
@@ -17,6 +17,7 @@ spring:
   devtools:
     restart:
       enabled: false
+      trigger-file: .reloadtrigger
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/postgres2
