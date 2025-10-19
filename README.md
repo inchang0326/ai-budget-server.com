@@ -11,7 +11,7 @@
     - AI: Spring AI
     - Data interface: Spring Data JPA/Redis
     - Service Interface: Spring Cloud OpenFeign
-  - Logging: Logback
+  - Logging: Logback + ELK Stack
   - Monitoring: Spring Actuator + Prometheus + Grafana
   - API Docs: Spring REST Docs
 - DBMS: PostgreSQL(with pgvector)
