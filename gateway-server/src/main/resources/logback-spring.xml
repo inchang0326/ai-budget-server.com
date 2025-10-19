@@ -2,9 +2,8 @@
 <configuration>
     <springProperty scope="context" name="APP_NAME" source="spring.application.name"/>
     <property name="LOG_PATH" value="./logs/${APP_NAME}"/>
-    <property name="FILE_LOG_PATTERN" value="[%d{yyyy-MM-dd HH:mm:ss}] [reqId=%X{requestId}] [%thread] %-5level %logger{36} - %msg%n"/>
-    <property name="ERROR_LOG_PATTERN" value="[%d{yyyy-MM-dd HH:mm:ss}] [userId=%X{userId}] [reqId=%X{requestId}] [%thread] %-5level %logger{36} - %msg%n%ex" />
-    <property name="CONSOLE_LOG_PATTERN" value="[%d{HH:mm:ss.SSS}] %highlight(%-5level) [userId=%X{userId}] [reqId=%X{requestId}] %cyan(%logger{15}) - %msg%n"/>
+    <property name="FILE_LOG_PATTERN" value="[%d{yyyy-MM-dd HH:mm:ss}] %-5level [%thread] %logger{36} - %msg%n"/>
+    <property name="CONSOLE_LOG_PATTERN" value="[%d{HH:mm:ss.SSS}] %highlight(%-5level) [%thread] %cyan(%logger{15}) - %msg%n"/>
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
@@ -12,25 +11,17 @@
         </encoder>
     </appender>
 
-    <appender name="SIFT_USER" class="ch.qos.logback.classic.sift.SiftingAppender">
-        <discriminator>
-            <key>userId</key>
-            <defaultValue>anonymous</defaultValue>
-        </discriminator>
-        <sift>
-            <appender name="FILE-${userId}" class="ch.qos.logback.core.rolling.RollingFileAppender">
-                <file>${LOG_PATH}/${userId}.log</file>
-                <encoder>
-                    <pattern>${FILE_LOG_PATTERN}</pattern>
-                </encoder>
-                <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-                    <fileNamePattern>${LOG_PATH}/%d{yyyy-MM-dd}/${userId}_%i.log</fileNamePattern>
-                    <maxFileSize>100MB</maxFileSize>
-                    <maxHistory>30</maxHistory>
-                    <totalSizeCap>5GB</totalSizeCap>
-                </rollingPolicy>
-            </appender>
-        </sift>
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/info.log</file>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/%d{yyyy-MM-dd}/info_%i.log</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>5GB</totalSizeCap>
+        </rollingPolicy>
     </appender>
 
     <appender name="FILE_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
@@ -41,7 +32,7 @@
             <onMismatch>DENY</onMismatch>
         </filter>
         <encoder>
-            <pattern>${ERROR_LOG_PATTERN}</pattern>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>${LOG_PATH}/%d{yyyy-MM-dd}/error_%i.log</fileNamePattern>
@@ -54,7 +45,7 @@
     <springProfile name="local,dev">
         <root level="INFO">
             <appender-ref ref="CONSOLE"/>
-            <appender-ref ref="SIFT_USER"/>
+            <appender-ref ref="FILE"/>
             <appender-ref ref="FILE_ERROR"/>
         </root>
         <logger name="com.teady" level="DEBUG"/>
@@ -62,7 +53,7 @@
 
     <springProfile name="prod">
         <root level="INFO">
-            <appender-ref ref="SIFT_USER"/>
+            <appender-ref ref="FILE"/>
             <appender-ref ref="FILE_ERROR"/>
         </root>
         <logger name="com.teady" level="INFO"/>
