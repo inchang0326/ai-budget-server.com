@@ -35,22 +35,24 @@
 ## Getting Started
 - How to run
   - Edit configurations
-  ```
-  Active Profiles: local
-  Environment Variables
-  - gateway-server: GATEWAY_SECRET={gatewaySecret}
-  - budget-server: GATEWAY_SECRET={gatewaySecret};DB_USERNAME={dbUsername};DB_PASSWORD={dbPassword};
-  ```
+    ```
+    Active Profiles: local
+    Environment Variables
+    - gateway-server: GATEWAY_SECRET={gatewaySecret}
+    - budget-server: GATEWAY_SECRET={gatewaySecret};DB_USERNAME={dbUsername};DB_PASSWORD={dbPassword};
+    ```
   - Run
-  ```
-  Tip) View → Tool Windows → Services → Run (every servers start)
-  ```
+    ```
+    Tip) View → Tool Windows → Services → Run (every servers start)
+    ```
 - Logs
   ```
   ./logs/{microserviceProjectName}/{date}/*
   ```
 - Montitor
   ```
+  cd docker
+  docker-compose up -d
   http://localhost:3001/dashboards
   ```
 - API Docs
