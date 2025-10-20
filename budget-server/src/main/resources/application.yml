@@ -80,6 +80,9 @@ eureka:
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
+gateway:
+  secret: ${GATEWAY_SECRET}
+
 logging:
   level:
     org.hibernate.SQL: debug
