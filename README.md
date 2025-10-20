@@ -33,7 +33,27 @@
 <img width="1000" height="600" alt="image" src="https://github.com/user-attachments/assets/fb2cc60e-8b4d-46da-9f06-185415f16fa4" />
 
 ## Getting Started
-- 작성중
+- How to run
+  - Edit configurations
   ```
-  작성중
+  Active Profiles: local
+  Environment Variables
+  - gateway-server: GATEWAY_SECRET={gatewaySecret}
+  - budget-server: GATEWAY_SECRET={gatewaySecret};DB_USERNAME={dbUsername};DB_PASSWORD={dbPassword};
   ```
+  - Run
+  ```
+  Tip) View → Tool Windows → Services → Run (every servers start)
+  ```
+- Logs
+  ```
+  ./logs/{microserviceProjectName}/{date}/*
+  ```
+- Montitor
+  ```
+  http://localhost:3001/dashboards
+  ```
+- API Docs
+  ```
+  http://localhost:8000/apidocs/{microserviceProjectName}/index.html
+  ``` 
