@@ -19,6 +19,7 @@
 ## Features
 - gateway-server
   - API Gateway & Load Balancing
+  - API Docs integration
 - eureka-server
   - Service Registry & Discovery
 - auth-server:
