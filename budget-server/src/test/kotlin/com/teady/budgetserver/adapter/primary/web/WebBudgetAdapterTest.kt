@@ -20,9 +20,11 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.request.RequestDocumentation.*
 import org.springframework.restdocs.payload.PayloadDocumentation.*
+import org.springframework.restdocs.headers.HeaderDocumentation.headerWithName
+import org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders
 
 @WebMvcTest(WebBudgetAdapter::class)
-@AutoConfigureRestDocs
+@AutoConfigureRestDocs(uriScheme = "http", uriHost = "localhost", uriPort = 8000)
 class WebBudgetAdapterTest {
 
     @Autowired
@@ -39,19 +41,19 @@ class WebBudgetAdapterTest {
 
     @Test
     fun transactions() {
-        val userId: String = "1"
+        val userId: String = "00000000000000000001"
         val year: Int = 2025
         val month: Int = 10
 
         val transactions: List<TransactionDto> = listOf(
             (TransactionDto(
-                "120251009000000111",
+                "0000000000000000000120251009000000111",
                 TransactionType.income,
                 1000000.0,
                 "부수익",
                 "앱테크",
                 "2025-10-24",
-                "1"
+                "00000000000000000001"
             ))
         )
 
@@ -60,18 +62,19 @@ class WebBudgetAdapterTest {
         mockMvc
             .perform(
                 get("/budget/transactions")
-                    .param("userId", userId)
+                    .header("X-USER-ID", userId)
                     .param("year", year.toString())
                     .param("month", month.toString())
                     .accept(MediaType.APPLICATION_JSON)
             )
-            .andExpect(status().isOk)
+            .andExpect(status().isOk())
             .andDo(
                 document(
                     "transactions",
+                    requestHeaders(
+                        headerWithName("X-USER-ID").description("사용자 ID")
+                    ),
                     queryParameters(
-                        parameterWithName("userId")
-                            .description("사용자 ID"),
                         parameterWithName("year")
                             .description("해당 년도")
                             .optional(),

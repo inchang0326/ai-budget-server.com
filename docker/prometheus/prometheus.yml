@@ -6,16 +6,24 @@ global:
   scrape_timeout: 10s
   # 외부 시스템에 전달할 때 붙일 레이블
   external_labels:
-    monitor: 'spring-boot-monitor'
+    monitor: 'ai-budget-server-monitor'
 
 # Prometheus 자체 메트릭 수집 설정
 scrape_configs:
-  # Job 이름: Prometheus 자신을 모니터링
+  # Prometheus 자신을 모니터링
   - job_name: 'prometheus'
     # 메트릭을 가져올 엔드포인트 설정
     static_configs:
       # localhost:9090에서 자신의 메트릭 수집
       - targets: ['localhost:9090']
+
+  # Eureka 서버를 정적으로 모니터링
+  - job_name: 'eureka-server'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['host.docker.internal:8761'] # Docker 컨테이너에서 호스트 PC의 8761 포트를 가리킴
+        labels:
+          application: 'EUREKA-SERVER' # Grafana에서 사용할 애플리케이션 이름 레이블
 
   # Eureka 기반 Service Discovery 설정
   - job_name: 'spring-micrometer'
