@@ -1,6 +1,6 @@
 # AI Budget Back-end Project
 
-## Developed with ..
+## Skills
 - Language: Kotlin
 - Design Pattern: Ports and Adapters(Hexagonal)
 - Framework: Spring Boot
@@ -29,7 +29,7 @@
 - ai-server:
   - LLM OpenAPI integration for AI based investment recommendation
 
-## Architecture
+## System Architecture
 <img width="1000" height="600" alt="image" src="https://github.com/user-attachments/assets/fb2cc60e-8b4d-46da-9f06-185415f16fa4" />
 
 ## Getting Started
