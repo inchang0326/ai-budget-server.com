@@ -32,13 +32,17 @@
 ## System Architecture
 <img width="1000" height="600" alt="image" src="https://github.com/user-attachments/assets/fb2cc60e-8b4d-46da-9f06-185415f16fa4" />
 
-## Getting Started
+## Getting Started to dev
 - How to run
   - Edit configurations
     ```
-    Active Profiles: local
-    Environment Variables
+    Active Profiles:
+    - gateway-server: local
+    - eureka-server: local
+    - budget-server: local
+    Environment Variables:
     - gateway-server: GATEWAY_SECRET={gatewaySecret}
+    - eureka-server: GATEWAY_SECRET={gatewaySecret}
     - budget-server: GATEWAY_SECRET={gatewaySecret};DB_USERNAME={dbUsername};DB_PASSWORD={dbPassword};
     ```
   - Run
