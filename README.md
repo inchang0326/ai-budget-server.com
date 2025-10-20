@@ -61,5 +61,5 @@
   ```
 - API Docs
   ```
-  http://localhost:8000/index.thml
+  http://localhost:8000/apidocs/index.thml
   ``` 
