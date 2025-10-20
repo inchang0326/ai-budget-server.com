@@ -61,5 +61,5 @@
   ```
 - API Docs
   ```
-  http://localhost:8000/apidocs/{microserviceProjectName}/index.html
+  http://localhost:8000/index.thml
   ``` 
