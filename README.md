@@ -32,7 +32,7 @@
 ## System Architecture
 <img width="1000" height="600" alt="image" src="https://github.com/user-attachments/assets/fb2cc60e-8b4d-46da-9f06-185415f16fa4" />
 
-## Getting Started to Dev
+## Getting Started to dev
 - How to run
   - Edit configurations
     ```
