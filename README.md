@@ -23,7 +23,7 @@
 - eureka-server
   - Service Registry & Discovery
 - auth-server:
-  - Authentication/Authorization
+  - Authentication & Authorization
 - budget-server:
   - Serving CRUD for budget transactions
   - Bank OpenAPI integration for synchronizing remote finance accounts budget transactions
