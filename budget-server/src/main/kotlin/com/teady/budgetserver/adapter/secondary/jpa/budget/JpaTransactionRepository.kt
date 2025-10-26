@@ -59,13 +59,6 @@ interface JpaTransactionRepository : JpaRepository<Transactions, TransactionId> 
     ): Long
 
     @Modifying
-    @Query("DELETE FROM Transactions t WHERE t.id.userId = :userId AND t.id.timestamp = :timestamp")
-    fun deleteByUserIdAndTimestamp(
-        @Param("userId") userId: String,
-        @Param("timestamp") timestamp: String
-    )
-
-    @Modifying
     @Query("DELETE FROM Transactions t WHERE t.id.userId = :userId")
     fun deleteAllByUserId(
         @Param("userId") userId: String

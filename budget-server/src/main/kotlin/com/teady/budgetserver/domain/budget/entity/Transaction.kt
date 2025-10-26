@@ -8,6 +8,7 @@ import jakarta.persistence.EntityListeners
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
 import jakarta.persistence.Table
+import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.io.Serializable
@@ -48,6 +49,11 @@ class Transactions(
     var description: String = description
         protected set
 
+    @CreatedDate
+    @Column(name="created_time", nullable = false, updatable = false)
+    var createdAt: LocalDateTime? = null
+        protected set
+
     @LastModifiedDate
     @Column(name="updated_time", nullable = false)
     var updatedAt: LocalDateTime? = null
@@ -66,7 +72,7 @@ data class TransactionId(
     @Column(name = "user_id", length = 20, nullable = false)
     val userId: String = "",
 
-    @Column(name = "timestamp", length = 15, nullable = false)
+    @Column(name = "timestamp", length = 17, nullable = false)
     val timestamp: String = ""
 ) : Serializable {
     companion object {

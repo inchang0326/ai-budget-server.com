@@ -3,8 +3,10 @@ package com.teady.budgetserver.application.usecase
 import com.teady.budgetserver.adapter.primary.web.port.WebBudgetAdapterPort
 import com.teady.budgetserver.adapter.secondary.jpa.budget.port.BudgetRepositoryPort
 import com.teady.budgetserver.application.dto.TransactionDto
+import com.teady.budgetserver.application.dto.toCardNo
 import com.teady.budgetserver.application.dto.toTimestamp
 import com.teady.budgetserver.application.dto.toUserId
+import com.teady.budgetserver.domain.budget.entity.OpenBankingCardHistoryId
 import com.teady.budgetserver.domain.budget.entity.TransactionId
 import com.teady.budgetserver.domain.budget.executor.TransactionExecutor
 import org.springframework.data.domain.Page
@@ -39,7 +41,7 @@ class BudgetUseCase(
             year,
             month
         ) { startTime, endTime ->
-            budgetRepositoryPort.selectAllByUserIdAndPeriodWithPaging(
+            budgetRepositoryPort.selectAllTransactionsByUserIdAndPeriodWithPaging(
                 userId,
                 startTime,
                 endTime,
@@ -49,16 +51,33 @@ class BudgetUseCase(
     }
 
     override fun transactions(userId: String, year: Int, month: Int): List<TransactionDto> {
-        return executeTransactions(
+
+        val list = ArrayList<TransactionDto>()
+
+        list.addAll(executeTransactions(
             year,
             month
         ) { startTime, endTime ->
-            budgetRepositoryPort.selectAllByUserIdAndPeriod(
+            budgetRepositoryPort.selectAllTransactionsByUserIdAndPeriod(
                 userId,
                 startTime,
                 endTime
             )
-        }.map { TransactionDto.fromEntity(it) }
+        }.map { TransactionDto.fromEntity(it) })
+
+        list.addAll(
+            executeTransactions(
+                year,
+                month
+            ) { startTime, endTime ->
+                budgetRepositoryPort.selectOpenBankingCardHistoryByUserIdAndPeriod(
+                    userId,
+                    startTime,
+                    endTime
+                )
+            }.map { TransactionDto.fromEntity(it) })
+
+        return list.sortedByDescending { it.timestamp }
     }
 
     override fun transactionsCount(userId: String, year: Int, month: Int): Long {
@@ -66,7 +85,7 @@ class BudgetUseCase(
             year,
             month
         ) { startTime, endTime ->
-            budgetRepositoryPort.selectAllCountByUserIdAndPeriod(
+            budgetRepositoryPort.selectAllTransactionsCountByUserIdAndPeriod(
                 userId,
                 startTime,
                 endTime
@@ -90,7 +109,7 @@ class BudgetUseCase(
         transactionDto.description ?: return
         val transactionId =
             TransactionId(userId = transactionDto.id.toUserId(), timestamp = transactionDto.id.toTimestamp())
-        val transaction = budgetRepositoryPort.selectById(transactionId)
+        val transaction = budgetRepositoryPort.selectTransactionById(transactionId)
         transaction.ifPresent { t ->
             t.update(
                 type = transactionDto.type,
@@ -105,13 +124,27 @@ class BudgetUseCase(
     override fun transactionsDelete(transactionDto: TransactionDto) {
         transactionExecutor.preExecute()
         transactionDto.id ?: return
-        budgetRepositoryPort.deleteByUserIdAndTimestamp(transactionDto.id.toUserId(), transactionDto.id.toTimestamp())
+
+        if (transactionDto.cardComapnyCode == null) budgetRepositoryPort.deleteTransactionById(
+            TransactionId(
+                transactionDto.id.toUserId(),
+                transactionDto.id.toTimestamp()
+            )
+        )
+        else budgetRepositoryPort.deleteOpenBankingCardHistoryById(
+            OpenBankingCardHistoryId(
+                transactionDto.id.toUserId(),
+                transactionDto.id.toCardNo(),
+                transactionDto.id.toTimestamp()
+            )
+        )
     }
 
     @Transactional(rollbackFor = [Throwable::class])
     override fun transactionsDeleteAll(userId: String) {
         transactionExecutor.preExecute()
-        budgetRepositoryPort.deleteAllByUserId(userId)
+        budgetRepositoryPort.deleteAllTransactionsByUserId(userId)
+        budgetRepositoryPort.deleteAllOpenBankingCardHistoryByUserId(userId)
     }
 
     private fun <T> executeTransactions(

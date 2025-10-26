@@ -3,7 +3,7 @@ package com.teady.budgetserver.domain.budget.executor
 import org.springframework.stereotype.Service
 
 @Service
-class TransactionExecutor {
+class OpenBankingCardExecutor {
     fun preExecute() {
     }
 }

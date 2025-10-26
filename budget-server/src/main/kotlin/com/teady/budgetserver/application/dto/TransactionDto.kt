@@ -1,5 +1,6 @@
 package com.teady.budgetserver.application.dto
 
+import com.teady.budgetserver.domain.budget.entity.OpenBankingCardHistory
 import com.teady.budgetserver.domain.budget.entity.Transactions
 import com.teady.budgetserver.domain.budget.entity.TransactionType
 import java.time.LocalDate
@@ -14,7 +15,10 @@ data class TransactionDto(
     val category: String?,
     val description: String?,
     val date: String?,
+    val cardComapnyCode: String?,
     val userId: String?,
+    val timestamp: String?,
+    val cardNo: String?,
 ) {
     fun toEntity(userId: String): Transactions {
 
@@ -33,15 +37,33 @@ data class TransactionDto(
 
     companion object {
         fun fromEntity(t: Transactions): TransactionDto = TransactionDto(
-            id = toId(t.id.userId, t.id.timestamp),
+            id = toId(t.id.userId, t.id.timestamp, null),
             type = t.type,
             amount = t.amount,
             category = t.category,
             description = t.description,
             date = LocalDateTime.parse(t.id.timestamp, DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"))
                 .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+            cardComapnyCode = null,
             userId = t.id.userId,
+            timestamp = t.id.timestamp,
+            cardNo = null,
         )
+
+        fun fromEntity(o: OpenBankingCardHistory): TransactionDto = TransactionDto(
+            id = toId(o.id.userId, o.id.timestamp, o.id.cardNo),
+            type = o.type,
+            amount = o.amount,
+            category = o.category,
+            description = o.description,
+            date = LocalDateTime.parse(o.id.timestamp, DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"))
+                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+            cardComapnyCode = o.cardCompanyCode,
+            userId = o.id.userId,
+            timestamp = o.id.timestamp,
+            cardNo = o.id.cardNo,
+        )
+
     }
 }
 
@@ -51,6 +73,13 @@ fun String.toTimestamp(): String {
     val dropped = this.drop(20)
     return dropped.take(17)
 }
-fun toId(userId: String, timestamp: String): String {
-    return userId.take(20).padStart(20, '0') + timestamp.take(17).padStart(17, '0')
+
+fun String.toCardNo(): String {
+    val dropped = this.drop(37)
+    return dropped.take(4)
+}
+
+fun toId(userId: String, timestamp: String, cardNo: String?): String {
+    if (cardNo == null) return userId.take(20).padStart(20, '0') + timestamp.take(17).padStart(17, '0')
+    else return userId.take(20).padStart(20, '0') + timestamp.take(17).padStart(17, '0') + cardNo.take(16).padStart(16, '0')
 }
