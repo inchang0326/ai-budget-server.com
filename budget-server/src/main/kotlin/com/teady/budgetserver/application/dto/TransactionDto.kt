@@ -15,8 +15,7 @@ data class TransactionDto(
     val category: String?,
     val description: String?,
     val date: String?,
-    val cardComapnyCode: String?,
-    val userId: String?,
+    val cardCompanyCode: String?,
     val timestamp: String?,
     val cardNo: String?,
 ) {
@@ -44,8 +43,7 @@ data class TransactionDto(
             description = t.description,
             date = LocalDateTime.parse(t.id.timestamp, DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"))
                 .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-            cardComapnyCode = null,
-            userId = t.id.userId,
+            cardCompanyCode = null,
             timestamp = t.id.timestamp,
             cardNo = null,
         )
@@ -58,8 +56,7 @@ data class TransactionDto(
             description = o.description,
             date = LocalDateTime.parse(o.id.timestamp, DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"))
                 .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-            cardComapnyCode = o.cardCompanyCode,
-            userId = o.id.userId,
+            cardCompanyCode = o.cardCompanyCode,
             timestamp = o.id.timestamp,
             cardNo = o.id.cardNo,
         )
