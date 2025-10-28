@@ -26,7 +26,7 @@
   - Authentication & Authorization
 - budget-server:
   - Serving CRUD for budget transactions
-  - Bank OpenAPI integration for synchronizing remote finance accounts budget transactions
+  - Open banking integration for synchronizing card payment history
 - ai-server:
   - LLM OpenAPI integration for AI based investment recommendation
 
