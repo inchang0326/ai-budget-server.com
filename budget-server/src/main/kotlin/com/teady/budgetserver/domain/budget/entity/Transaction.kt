@@ -20,7 +20,7 @@ import java.time.LocalDateTime
 class Transactions(
     userId: String,
     timestamp: String,
-    type: TransactionType,
+    type: TransactionTypeEnum,
     amount: Double,
     category: String,
     description: String
@@ -34,7 +34,7 @@ class Transactions(
 
     @Enumerated(EnumType.STRING)
     @Column(name="type", length = 10, nullable = false)
-    var type: TransactionType = type
+    var type: TransactionTypeEnum = type
         protected set
 
     @Column(name="amount", nullable = false)
@@ -59,7 +59,7 @@ class Transactions(
     var updatedAt: LocalDateTime? = null
         protected set
 
-    fun update(type: TransactionType, amount: Double, category: String, description: String) {
+    fun update(type: TransactionTypeEnum, amount: Double, category: String, description: String) {
         this.type = type
         this.amount = amount
         this.category = category
@@ -80,7 +80,7 @@ data class TransactionId(
     }
 }
 
-enum class TransactionType {
+enum class TransactionTypeEnum {
     income,
     expense,
     none,

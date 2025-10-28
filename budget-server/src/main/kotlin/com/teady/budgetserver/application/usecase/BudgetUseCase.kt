@@ -125,19 +125,24 @@ class BudgetUseCase(
         transactionExecutor.preExecute()
         transactionDto.id ?: return
 
-        if (transactionDto.cardCompanyCode == null) budgetRepositoryPort.deleteTransactionById(
+        println("test=> " + transactionDto.cardNo)
+        println("test=> " + transactionDto.id.toUserId())
+        println("test=> " + transactionDto.id.toCardNo())
+        println("test=> " + transactionDto.id.toTimestamp())
+
+        if (transactionDto.cardNo == null) budgetRepositoryPort.deleteTransactionById(
             TransactionId(
                 transactionDto.id.toUserId(),
                 transactionDto.id.toTimestamp()
             )
-        )
-        else budgetRepositoryPort.deleteOpenBankingCardHistoryById(
+        ) else budgetRepositoryPort.deleteOpenBankingCardHistoryById(
             OpenBankingCardHistoryId(
                 transactionDto.id.toUserId(),
                 transactionDto.id.toCardNo(),
                 transactionDto.id.toTimestamp()
             )
         )
+
     }
 
     @Transactional(rollbackFor = [Throwable::class])

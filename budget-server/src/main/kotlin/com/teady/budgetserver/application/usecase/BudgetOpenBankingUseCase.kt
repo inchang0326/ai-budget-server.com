@@ -4,7 +4,7 @@ import com.teady.budgetserver.adapter.primary.web.port.WebBudgetOpenBankingAdapt
 import com.teady.budgetserver.adapter.secondary.jpa.budget.port.BudgetRepositoryPort
 import com.teady.budgetserver.application.dto.OpenBankingCardDto
 import com.teady.budgetserver.domain.budget.entity.OpenBankingCardHistory
-import com.teady.budgetserver.domain.budget.entity.TransactionType
+import com.teady.budgetserver.domain.budget.entity.TransactionTypeEnum
 import com.teady.budgetserver.domain.budget.executor.OpenBankingCardExecutor
 import org.springframework.stereotype.Service
 import java.time.format.DateTimeFormatter
@@ -49,8 +49,8 @@ class BudgetOpenBankingUseCase(
                 userId = "00000000000000000001",
                 cardNo = "1234********5678",
                 timestamp = "20251009000000111",
-                cardCompanyCode = "0100",
-                type = TransactionType.income,
+                cardCompanyCode = "0001",
+                type = TransactionTypeEnum.income,
                 amount = 1000000.0,
                 category = "부수입",
                 description = "멘토링"

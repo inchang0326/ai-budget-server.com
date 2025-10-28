@@ -14,7 +14,7 @@ class OpenBankingCardHistory(
     cardNo: String,
     timestamp: String,
     cardCompanyCode: String,
-    type: TransactionType,
+    type: TransactionTypeEnum,
     amount: Double,
     category: String,
     description: String
@@ -33,7 +33,7 @@ class OpenBankingCardHistory(
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type", length = 10, nullable = false)
-    var type: TransactionType = type
+    var type: TransactionTypeEnum = type
         protected set
 
     @Column(name = "amount", nullable = false)
@@ -84,5 +84,23 @@ data class OpenBankingCardHistoryId(
 ) : Serializable {
     companion object {
         private const val serialVersionUID = 1L
+    }
+}
+
+enum class CardCompanyEnum(val code: String, val koreanName: String) {
+    KB_KOOKMIN_CARD("0001", "KB국민카드"),
+    SHINHAN_CARD("0002", "신한카드"),
+    SAMSUNG_CARD("0003", "삼성카드"),
+    HYUNDAI_CARD("0004", "현대카드"),
+    LOTTE_CARD("0005", "롯데카드"),
+    WOORI_CARD("0006", "우리카드"),
+    HANA_CARD("0007", "하나카드"),
+    NH_CARD("0008", "NH농협카드"),
+    BC_CARD("0009", "BC카드");
+
+    companion object {
+        fun getKoreanNameByCode(code: String): String {
+            return entries.find { it.code == code }?.koreanName ?: "없음"
+        }
     }
 }

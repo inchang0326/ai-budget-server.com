@@ -1,8 +1,9 @@
 package com.teady.budgetserver.application.dto
 
+import com.teady.budgetserver.domain.budget.entity.CardCompanyEnum
 import com.teady.budgetserver.domain.budget.entity.OpenBankingCardHistory
 import com.teady.budgetserver.domain.budget.entity.Transactions
-import com.teady.budgetserver.domain.budget.entity.TransactionType
+import com.teady.budgetserver.domain.budget.entity.TransactionTypeEnum
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -10,12 +11,12 @@ import java.time.format.DateTimeFormatter
 
 data class TransactionDto(
     val id: String?,
-    val type: TransactionType?,
+    val type: TransactionTypeEnum?,
     val amount: Double?,
     val category: String?,
     val description: String?,
     val date: String?,
-    val cardCompanyCode: String?,
+    val cardCompany: String?,
     val timestamp: String?,
     val cardNo: String?,
 ) {
@@ -27,7 +28,7 @@ data class TransactionDto(
         return Transactions(
             userId = userId,
             timestamp = localDateTime.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS")),
-            type = type ?: TransactionType.none,
+            type = type ?: TransactionTypeEnum.none,
             amount = amount ?: 0.0,
             category = category ?: "",
             description = description ?: ""
@@ -43,7 +44,7 @@ data class TransactionDto(
             description = t.description,
             date = LocalDateTime.parse(t.id.timestamp, DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"))
                 .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-            cardCompanyCode = null,
+            cardCompany = null,
             timestamp = t.id.timestamp,
             cardNo = null,
         )
@@ -56,7 +57,7 @@ data class TransactionDto(
             description = o.description,
             date = LocalDateTime.parse(o.id.timestamp, DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"))
                 .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-            cardCompanyCode = o.cardCompanyCode,
+            cardCompany = CardCompanyEnum.getKoreanNameByCode(o.cardCompanyCode),
             timestamp = o.id.timestamp,
             cardNo = o.id.cardNo,
         )
@@ -73,7 +74,7 @@ fun String.toTimestamp(): String {
 
 fun String.toCardNo(): String {
     val dropped = this.drop(37)
-    return dropped.take(4)
+    return dropped.take(16)
 }
 
 fun toId(userId: String, timestamp: String, cardNo: String?): String {
