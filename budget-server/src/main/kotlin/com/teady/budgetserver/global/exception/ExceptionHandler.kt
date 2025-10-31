@@ -1,23 +1,20 @@
 package com.teady.budgetserver.global.exception
 
+import ApiResponse
 import io.micrometer.core.instrument.Counter
 import io.micrometer.core.instrument.MeterRegistry
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.http.converter.HttpMessageNotReadableException
+import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.MethodArgumentNotValidException
+import org.springframework.web.bind.MissingServletRequestParameterException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
-import java.time.LocalDateTime
-
-data class ErrorResponse(
-    val timestamp: LocalDateTime = LocalDateTime.now(),
-    val status: Int,
-    val error: String,
-    val message: String?,
-    val errorCode: String,
-    val path: String? = null
-)
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
+import java.util.concurrent.ConcurrentHashMap
+import javax.validation.ConstraintViolationException
 
 @RestControllerAdvice
 class GlobalExceptionHandler(
@@ -25,83 +22,213 @@ class GlobalExceptionHandler(
 ) {
 
     private val logger = LoggerFactory.getLogger(javaClass)
+    private val errorCounters = ConcurrentHashMap<String, Counter>()
 
-    // 커스텀 비즈니스 예외 처리
     @ExceptionHandler(BusinessException::class)
-    fun handleBusinessException(ex: BusinessException): ResponseEntity<ErrorResponse> {
-        logger.error("Business Exception: ${ex.message}", ex)
+    fun handleBusinessException(
+        ex: BusinessException,
+    ): ResponseEntity<ApiResponse<Nothing>> {
 
-        // Prometheus 메트릭 기록
-        incrementErrorCounter(ex.errorCode)
+        logger.error("Business Exception: {}", ex.message, ex)
 
-        val response = ErrorResponse(
-            status = HttpStatus.BAD_REQUEST.value(),
-            error = HttpStatus.BAD_REQUEST.reasonPhrase,
-            message = ex.message,
-            errorCode = ex.errorCode
-        )
+        val errCode = ex.errorCode.code
+        val errMessage = ex.message
+        val errStatus = ex.errorCode.status.value()
 
-        return ResponseEntity.badRequest().body(response)
+        incrementErrorCounter(errCode, errStatus)
+
+        return ResponseEntity.status(errStatus)
+            .body(
+                ApiResponse.failure(
+                    error = errCode,
+                    message = errMessage
+                )
+            )
     }
 
-    // 리소스를 찾지 못한 경우
-    @ExceptionHandler(ResourceNotFoundException::class)
-    fun handleResourceNotFoundException(ex: ResourceNotFoundException): ResponseEntity<ErrorResponse> {
-        logger.error("Resource Not Found: ${ex.message}", ex)
+    @ExceptionHandler(Exception::class)
+    fun handleFeignClientException(
+        ex: FeignClientException,
+    ): ResponseEntity<ApiResponse<Nothing>> {
 
-        incrementErrorCounter(ex.errorCode)
+        logger.error("FeignClient Exception: {}", ex.message, ex)
 
-        val response = ErrorResponse(
-            status = HttpStatus.NOT_FOUND.value(),
-            error = HttpStatus.NOT_FOUND.reasonPhrase,
-            message = ex.message,
-            errorCode = ex.errorCode
-        )
+        val errCode = ex.errorCode.code
+        val errMessage = ex.message
+        val errStatus = ex.errorCode.status.value()
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response)
+        incrementErrorCounter(errCode, errStatus)
+
+        return ResponseEntity.status(errStatus)
+            .body(
+                ApiResponse.failure(
+                    error = errCode,
+                    message = errMessage
+                )
+            )
     }
 
-    // Validation 예외 처리
+    /* 사용자 정의 Business Exception 또는 FeignClient Exception이 아닌 것들 start */
+    @ExceptionHandler(Exception::class)
+    fun handleUnexpectedException(
+        ex: Exception,
+    ): ResponseEntity<ApiResponse<Nothing>> {
+
+        logger.error("Unexpected Exception: {}", ex.message, ex)
+
+        val errCode = ErrorCode.INTERNAL_SERVER_ERROR.code
+        val errMessage = ErrorCode.INTERNAL_SERVER_ERROR.message
+        val errStatus = ErrorCode.INTERNAL_SERVER_ERROR.status.value()
+
+        incrementErrorCounter(errCode, errStatus)
+
+        return ResponseEntity.status(errStatus)
+            .body(
+                ApiResponse.failure(
+                    error = errCode,
+                    message = errMessage
+                )
+            )
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException::class)
-    fun handleValidationException(ex: MethodArgumentNotValidException): ResponseEntity<ErrorResponse> {
+    fun handleValidationException(
+        ex: MethodArgumentNotValidException,
+    ): ResponseEntity<ApiResponse<Nothing>> {
+
         val errorMessage = ex.bindingResult.fieldErrors
             .joinToString(", ") { "${it.field}: ${it.defaultMessage}" }
 
-        logger.error("Validation Error: $errorMessage", ex)
+        logger.warn("Validation Error: {}", errorMessage)
+        incrementErrorCounter("VALIDATION_ERROR", HttpStatus.BAD_REQUEST.value())
 
-        incrementErrorCounter("VALIDATION_ERROR")
-
-        val response = ErrorResponse(
-            status = HttpStatus.BAD_REQUEST.value(),
-            error = HttpStatus.BAD_REQUEST.reasonPhrase,
-            message = errorMessage,
-            errorCode = "VALIDATION_ERROR"
-        )
-
-        return ResponseEntity.badRequest().body(response)
+        return ResponseEntity.badRequest()
+            .body(
+                ApiResponse.failure(
+                    error = "VALIDATION_ERROR",
+                    message = errorMessage
+                )
+            )
     }
 
-    // 모든 예외 처리 (최종 핸들러)
-    @ExceptionHandler(Exception::class)
-    fun handleAllException(ex: Exception): ResponseEntity<ErrorResponse> {
-        logger.error("Unexpected Error: ${ex.message}", ex)
+    @ExceptionHandler(HttpMessageNotReadableException::class)
+    fun handleHttpMessageNotReadable(
+        ex: HttpMessageNotReadableException
+    ): ResponseEntity<ApiResponse<Nothing>> {
 
-        incrementErrorCounter("INTERNAL_SERVER_ERROR")
+        logger.warn("Invalid request body: {}", ex.message)
 
-        val response = ErrorResponse(
-            status = HttpStatus.INTERNAL_SERVER_ERROR.value(),
-            error = HttpStatus.INTERNAL_SERVER_ERROR.reasonPhrase,
-            message = "서버 내부 오류가 발생했습니다",
-            errorCode = "INTERNAL_SERVER_ERROR"
-        )
+        val errorCode = ErrorCode.INVALID_REQUEST
+        incrementErrorCounter(errorCode.code, errorCode.status.value())
 
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response)
+        return ResponseEntity.badRequest()
+            .body(
+                ApiResponse.failure(
+                    error = errorCode.code,
+                    message = "요청 본문을 읽을 수 없습니다. JSON 형식을 확인해주세요."
+                )
+            )
     }
 
-    private fun incrementErrorCounter(errorCode: String) {
-        Counter.builder("application.errors")
-            .tag("error_code", errorCode)
-            .register(meterRegistry)
-            .increment()
+    @ExceptionHandler(MethodArgumentTypeMismatchException::class)
+    fun handleTypeMismatch(
+        ex: MethodArgumentTypeMismatchException
+    ): ResponseEntity<ApiResponse<Nothing>> {
+
+        val message = "${ex.name} 파라미터의 타입이 올바르지 않습니다. " +
+                "기대 타입: ${ex.requiredType?.simpleName}"
+
+        logger.warn(message)
+
+        return ResponseEntity.badRequest()
+            .body(
+                ApiResponse.failure(
+                    error = "TYPE_MISMATCH",
+                    message = message
+                )
+            )
+    }
+    @ExceptionHandler(MissingServletRequestParameterException::class)
+    fun handleMissingParameter(
+        ex: MissingServletRequestParameterException
+    ): ResponseEntity<ApiResponse<Nothing>> {
+
+        val message = "필수 쿼리 파라미터가 누락되었습니다: ${ex.parameterName}"
+        logger.warn(message)
+
+        return ResponseEntity.badRequest()
+            .body(
+                ApiResponse.failure(
+                    error = "MISSING_PARAMETER",
+                    message = message
+                )
+            )
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException::class)
+    fun handleMethodNotSupported(
+        ex: HttpRequestMethodNotSupportedException
+    ): ResponseEntity<ApiResponse<Nothing>> {
+
+        val message = "${ex.method} 메서드는 지원하지 않습니다. " +
+                "지원 메서드: ${ex.supportedHttpMethods?.joinToString()}"
+
+        logger.warn(message)
+
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
+            .body(
+                ApiResponse.failure(
+                    error = "METHOD_NOT_ALLOWED",
+                    message = message
+                )
+            )
+    }
+
+    @ExceptionHandler(AccessDeniedException::class)
+    fun handleAccessDenied(
+        ex: AccessDeniedException
+    ): ResponseEntity<ApiResponse<Nothing>> {
+
+        logger.warn("Access denied: {}", ex.message)
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+            .body(
+                ApiResponse.failure(
+                    error = "ACCESS_DENIED",
+                    message = "접근 권한이 없습니다"
+                )
+            )
+    }
+
+    @ExceptionHandler(ConstraintViolationException::class)
+    fun handleConstraintViolationException(
+        ex: AccessDeniedException
+    ): ResponseEntity<ApiResponse<Nothing>> {
+
+        logger.warn("Access denied: {}", ex.message)
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+            .body(
+                ApiResponse.failure(
+                    error = "ACCESS_DENIED",
+                    message = "접근 권한이 없습니다"
+                )
+            )
+    }
+    /* 사용자 정의 Business Exception 또는 FeignClient Exception이 아닌 것들 end */
+
+    private fun incrementErrorCounter(errCode: String, errMessage: String, errStatus: Int) {
+        val counterKey = "${errCode}_${errMessage}_${errStatus}"
+
+        val counter = errorCounters.computeIfAbsent(counterKey) {
+            Counter.builder("application.errors.total")
+                .tag("error_code", errCode)
+                .tag("error_message", errMessage)
+                .tag("error_status", errStatus.toString())
+                .description("Total number of errors by (error_code, error_message, error_status")
+                .register(meterRegistry)
+        }
+
+        counter.increment()
     }
 }

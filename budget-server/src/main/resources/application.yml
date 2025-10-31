@@ -83,16 +83,61 @@ eureka:
 gateway:
   secret: ${GATEWAY_SECRET}
 
+feign:
+  circuitbreaker:
+    enabled: true
+  client:
+    config:
+      default:
+        loggerLevel: BASIC
+  httpclient:
+    hc5:
+      enabled: true
+
+# Resilience4j Circuit Breaker 설정
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        registerHealthIndicator: true
+        slidingWindowType: COUNT_BASED # 요청 수 기준
+        slidingWindowSize: 10 # close > open 상태 변경에 대해 최근 10번 요청 기준
+        minimumNumberOfCalls: 5 # close > open 상태 변경 판단 위한 최소 요청 수 5번 제한
+        failureRateThreshold: 50 # minimumNumberOfCalls 이상 실패율 50% 이상 시 close > open 상태 변경
+        waitDurationInOpenState: 10s # 서킷 open 시간으로, 이후부터 half-open 상태로 변경하여 복구 시작
+        permittedNumberOfCallsInHalfOpenState: 2 # half-open 상태에서 허용할 테스트 요청 수
+        automaticTransitionFromOpenToHalfOpenEnabled: true # waitDurationInOpenState 이후 자동으로 open > half-open 상태 변경할지 여부
+    instances:
+      # Feign 클라이언트별 개별 설정
+      OpenBankingFeignClient:
+        baseConfig: default # 위 default 설정 상속
+  retry:
+    configs:
+      default:
+        maxAttempts: 3
+        waitDuration: 500ms
+        retryExceptions:
+          - java.io.IOException
+          - java.util.concurrent.TimeoutException
+    instances:
+      OpenBankingFeignClient:
+        baseConfig: default
+
+opebanking:
+  api:
+    base-url: https://api.example.com
+
 logging:
   level:
     org.hibernate.SQL: debug
     org.hibernate.orm.jdbc.bind: trace
+    com.teady.budget.client: DEBUG
 
 management:
   endpoints:
     web:
       exposure:
-        include: health,info,prometheus,metrics
+        include: health,info,prometheus,metrics,circuitbreakers
       base-path: /actuator
   endpoint:
     health:

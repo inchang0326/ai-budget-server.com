@@ -37,6 +37,12 @@ subprojects {
 
     plugins.withType<JavaPlugin> {
         dependencies {
+            // MSA
+            "implementation"("org.springframework.cloud:spring-cloud-starter-openfeign")
+            "implementation"("io.github.openfeign:feign-hc5")
+            "implementation"("org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j")
+            "implementation"("io.github.resilience4j:resilience4j-feign")
+
             // Monitoring
             "implementation"("org.springframework.boot:spring-boot-starter-actuator")
             "implementation"("io.micrometer:micrometer-registry-prometheus")
@@ -52,7 +58,7 @@ subprojects {
 
     extensions.configure<DependencyManagementExtension> {
         imports {
-            mavenBom(SpringBootPlugin.BOM_COORDINATES)
+                mavenBom(SpringBootPlugin.BOM_COORDINATES)
             mavenBom("org.springframework.cloud:spring-cloud-dependencies:2023.0.0")
         }
     }

@@ -1,20 +1,69 @@
 package com.teady.budgetserver.global.exception
+
+import org.springframework.http.HttpStatus
+
 sealed class BusinessException(
-    message: String,
-    val errorCode: String
+    val errorCode: ErrorCode,
+    override val message: String = errorCode.message,
+    val status: HttpStatus = errorCode.status
 ) : RuntimeException(message)
 
 class ResourceNotFoundException(
-    message: String = "요청한 리소스를 찾을 수 없습니다",
-    errorCode: String = "RESOURCE_NOT_FOUND"
-) : BusinessException(message, errorCode)
+    errorCode: ErrorCode = ErrorCode.RESOURCE_NOT_FOUND,
+    message: String = errorCode.message,
+    status: HttpStatus = errorCode.status
+) : BusinessException(errorCode, message, status)
 
 class InvalidRequestException(
-    message: String = "잘못된 요청입니다",
-    errorCode: String = "INVALID_REQUEST"
-) : BusinessException(message, errorCode)
+    errorCode: ErrorCode = ErrorCode.INVALID_REQUEST,
+    message: String = errorCode.message,
+    status: HttpStatus = errorCode.status
+) : BusinessException(errorCode, message, status)
 
 class UnauthorizedException(
-    message: String = "인증이 필요합니다",
-    errorCode: String = "UNAUTHORIZED"
-) : BusinessException(message, errorCode)
+    errorCode: ErrorCode = ErrorCode.UNAUTHORIZED,
+    message: String = errorCode.message,
+    status: HttpStatus = errorCode.status
+) : BusinessException(errorCode, message, status)
+
+sealed class FeignClientException(
+    val errorCode: ErrorCode,
+    override val message: String = errorCode.message,
+    val status: HttpStatus = errorCode.status
+) : RuntimeException(message)
+
+class FeignBadRequestException(
+    errorCode: ErrorCode = ErrorCode.FEIGN_BAD_REQUEST,
+    message: String = errorCode.message,
+    status: HttpStatus = errorCode.status
+) : FeignClientException(errorCode, message, status)
+
+class FeignUnauthorizedException(
+    errorCode: ErrorCode = ErrorCode.FEIGN_UNAUTHORIZED,
+    message: String = errorCode.message,
+    status: HttpStatus = errorCode.status
+) : FeignClientException(errorCode, message, status)
+
+class FeignForbiddenException(
+    errorCode: ErrorCode = ErrorCode.FEIGN_FORBIDDEN,
+    message: String = errorCode.message,
+    status: HttpStatus = errorCode.status
+) : FeignClientException(errorCode, message, status)
+
+class FeignResourceNotFoundException(
+    errorCode: ErrorCode = ErrorCode.FEIGN_RESOURCE_NOT_FOUND,
+    message: String = errorCode.message,
+    status: HttpStatus = errorCode.status
+) : FeignClientException(errorCode, message, status)
+
+class FeignInternalServerException(
+    errorCode: ErrorCode = ErrorCode.FEIGN_INTERNAL_SERVER_ERROR,
+    message: String = errorCode.message,
+    status: HttpStatus = errorCode.status
+) : FeignClientException(errorCode, message, status)
+
+class FeignServiceUnavailableException(
+    errorCode: ErrorCode = ErrorCode.FEIGN_SERVICE_UNAVAILABLE,
+    message: String = errorCode.message,
+    status: HttpStatus = errorCode.status
+) : FeignClientException(errorCode, message, status)
