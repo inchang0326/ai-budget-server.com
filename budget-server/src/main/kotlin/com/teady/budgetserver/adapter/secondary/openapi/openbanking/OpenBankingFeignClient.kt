@@ -1,5 +1,6 @@
 package com.teady.budgetserver.adapter.secondary.openapi.openbanking
 
+import com.teady.budgetserver.application.dto.OpenBankingCardDto
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.web.bind.annotation.*
 
@@ -7,25 +8,15 @@ import org.springframework.web.bind.annotation.*
     name = "openbanking-api-client",
     url = "\${openbanking.api.base-url}",
     configuration = [OpenBankingFeignConfig::class],
-    fallback = ExternalApiClientFallback::class
+    fallback = OpenBankingFeignClientFallbackFactory::class
 )
-interface ExternalApiClient {
-
-    /**
-     * GET 요청 예제: 사용자 정보 조회
-     * @param userId 사용자 ID
-     * @return 사용자 정보
-     */
+interface OpenBankingFeignClient {
     @GetMapping("/todo")
-    fun getFinCardNumber(): String {
-        return "todo";
-    }
+    fun getFinCardNumber(): String
 
-    /**
-     * POST 요청 예제: 사용자 생성
-     * @param request 생성할 사용자 정보
-     * @return 생성된 사용자 정보
-     */
     @PostMapping("/todo")
-    fun createUser()
+    fun createFinCardNumber(): String
+
+    @PostMapping("/todo")
+    fun getCardHistory(): List<OpenBankingCardDto>
 }

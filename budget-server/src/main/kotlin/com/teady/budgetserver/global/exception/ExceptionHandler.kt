@@ -28,7 +28,7 @@ class GlobalExceptionHandler(
         ex: BusinessException,
     ) = handleException(ex, ex.errorCode)
 
-    @ExceptionHandler(Exception::class)
+    @ExceptionHandler(FeignClientException::class)
     fun handleFeignClientException(
         ex: FeignClientException,
     ) = handleException(ex, ex.errorCode)
@@ -78,18 +78,23 @@ class GlobalExceptionHandler(
     // query parameter 또는 path variable의 validation 예외
     @ExceptionHandler(ConstraintViolationException::class)
     fun handleConstraintViolationException(
-        ex: AccessDeniedException
+        ex: ConstraintViolationException
     ) = handleException(ex, ErrorCode.SYSTEM_CONSTRAINT_VIOLATION)
     /* 사용자 정의 Business Exception 또는 FeignClient Exception이 아닌 것들 end */
 
     private fun handleException(ex: Exception, errorCode: ErrorCode): ResponseEntity<ApiResponse<Nothing>> {
-        logger.warn("Constraint Violation Exception: {}", ex.message)
 
         val errCode = errorCode.code
         val errMessage = errorCode.message
-        val errStatus = errorCode.status.value()
+        val errStatus = errorCode.status
 
-        incrementErrorCounter(errCode, errMessage, errStatus)
+        if (errStatus.is4xxClientError) {
+            logger.warn("[{}] {} {}", errCode, errMessage, ex.message)
+        } else {
+            logger.error("[{}] {} {}", errCode, errMessage, ex.message)
+        }
+
+        incrementErrorCounter(errCode, errMessage, errStatus.value())
 
         return ResponseEntity.status(errStatus)
             .body(

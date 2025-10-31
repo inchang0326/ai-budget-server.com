@@ -123,7 +123,7 @@ resilience4j:
       OpenBankingFeignClient:
         baseConfig: default
 
-opebanking:
+openbanking:
   api:
     base-url: https://api.example.com
 
@@ -131,7 +131,7 @@ logging:
   level:
     org.hibernate.SQL: debug
     org.hibernate.orm.jdbc.bind: trace
-    com.teady.budget.client: DEBUG
+    com.teady.budgetserver.adapter.secondary.openapi.openbanking: DEBUG
 
 management:
   endpoints:
