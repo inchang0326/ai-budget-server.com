@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component
  * - 읽기 작업: 기본값/빈 값 반환 (서비스 연속성)
  * - 쓰기 작업: 명시적 실패 (데이터 안전)
  */ @Component
-class OpenBankingFallbackFactory : FallbackFactory<OpenBankingFeignClient> {
+class OpenBankingFeignClientFallbackFactory : FallbackFactory<OpenBankingFeignClient> {
 
     override fun create(cause: Throwable) = object : OpenBankingFeignClient { // OpenBankingFeignClient를 상속한 익명 객체 object
 
