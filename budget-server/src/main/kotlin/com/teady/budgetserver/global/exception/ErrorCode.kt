@@ -7,6 +7,7 @@ enum class ErrorCode(
     val message: String,
     val status: HttpStatus
 ) {
+    // 사용자 정의 Business Exception 용 Error 상세
     RESOURCE_NOT_FOUND(
         code = "RESOURCE_NOT_FOUND",
         message = "요청한 리소스를 찾을 수 없습니다",
@@ -32,6 +33,8 @@ enum class ErrorCode(
         message = "서버 내부 오류가 발생했습니다",
         status = HttpStatus.INTERNAL_SERVER_ERROR
     ),
+
+    // 사용자 정의 FeignClient Exception 용 Error 상세
     FEIGN_CLIENT_ERROR(
         code = "FEIGN_CLIENT_ERROR",
         message = "외부 API 호출 중 오류가 발생했습니다",
@@ -66,7 +69,50 @@ enum class ErrorCode(
         code = "FEIGN_SERVICE_UNAVAILABLE",
         message = "외부 API 서비스를 일시적으로 사용할 수 없습니다",
         status = HttpStatus.SERVICE_UNAVAILABLE
-    );
+    ),
+
+    // 시스템 Error 상세
+    SYSTEM_ARGUMENT_NOT_VALID(
+    code = "SYSTEM_ARGUMENT_NOT_VALID",
+    message = "요청 파라미터 검증에 실패했습니다",
+    status = HttpStatus.BAD_REQUEST
+    ), // MethodArgumentNotValidException
+
+    SYSTEM_INVALID_JSON(
+    code = "SYSTEM_INVALID_JSON",
+    message = "요청 본문의 JSON을 읽을 수 없습니다. 형식을 확인해 주세요",
+    status = HttpStatus.BAD_REQUEST
+    ), // HttpMessageNotReadableException
+
+    SYSTEM_ARGUMENT_TYPE_MISMATCH(
+    code = "SYSTEM_ARGUMENT_TYPE_MISMATCH",
+    message = "요청 파라미터의 타입이 올바르지 않습니다",
+    status = HttpStatus.BAD_REQUEST
+    ), // MethodArgumentTypeMismatchException
+
+    SYSTEM_MISSING_PARAMETER(
+    code = "SYSTEM_MISSING_PARAMETER",
+    message = "필수 요청 파라미터가 누락되었습니다",
+    status = HttpStatus.BAD_REQUEST
+    ), // MissingServletRequestParameterException
+
+    SYSTEM_UNSUPPORTED_METHOD(
+    code = "SYSTEM_UNSUPPORTED_METHOD",
+    message = "지원하지 않는 HTTP 메서드입니다",
+    status = HttpStatus.METHOD_NOT_ALLOWED
+    ), // HttpRequestMethodNotSupportedException
+
+    SYSTEM_ACCESS_DENIED(
+    code = "SYSTEM_ACCESS_DENIED",
+    message = "접근 권한이 없습니다",
+    status = HttpStatus.FORBIDDEN
+    ), // AccessDeniedException
+
+    SYSTEM_CONSTRAINT_VIOLATION(
+    code = "SYSTEM_CONSTRAINT_VIOLATION",
+    message = "요청 값이 유효성 제약 조건을 위반했습니다",
+    status = HttpStatus.BAD_REQUEST
+    ); // ConstraintViolationException
 
     companion object {
         fun fromCode(code: String): ErrorCode {
