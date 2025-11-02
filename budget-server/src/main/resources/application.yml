@@ -125,7 +125,7 @@ resilience4j:
 
 openbanking:
   api:
-    base-url: https://api.example.com
+    base-url: https://developers.nonghyup.com
 
 logging:
   level:

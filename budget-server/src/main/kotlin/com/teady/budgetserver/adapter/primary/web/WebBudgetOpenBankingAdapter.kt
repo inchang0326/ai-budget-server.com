@@ -2,7 +2,7 @@ package com.teady.budgetserver.adapter.primary.web
 
 import PaginatedResponse
 import com.teady.budgetserver.adapter.primary.web.port.WebBudgetOpenBankingAdapterPort
-import com.teady.budgetserver.application.dto.OpenBankingCardDto
+import com.teady.budgetserver.application.dto.OpenBankingCardDtoWithClient
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -26,11 +26,11 @@ class WebBudgetOpenBankingAdapter(val webBudgetOpenBankingAdapterPort: WebBudget
 
     @GetMapping("/cards/created-time")
     fun cardCreatedTime(
-        @RequestHeader("X-USER-ID") userId: String, @RequestBody openBankingCardDto: OpenBankingCardDto
-    ) = webBudgetOpenBankingAdapterPort.cardCreatedTime(userId, openBankingCardDto).toSuccessResponse()
+        @RequestHeader("X-USER-ID") userId: String, @RequestBody openBankingCardDtoWithClient: OpenBankingCardDtoWithClient
+    ) = webBudgetOpenBankingAdapterPort.cardCreatedTime(userId, openBankingCardDtoWithClient).toSuccessResponse()
 
     @PostMapping("/cards")
     fun cards(
-        @RequestHeader("X-USER-ID") userId: String, @RequestBody openBankingCardDto: OpenBankingCardDto
-    ) = webBudgetOpenBankingAdapterPort.cards(userId, openBankingCardDto).toSuccessResponse()
+        @RequestHeader("X-USER-ID") userId: String, @RequestBody openBankingCardDtoWithClient: OpenBankingCardDtoWithClient
+    ) = webBudgetOpenBankingAdapterPort.cards(userId, openBankingCardDtoWithClient).toSuccessResponse()
 }

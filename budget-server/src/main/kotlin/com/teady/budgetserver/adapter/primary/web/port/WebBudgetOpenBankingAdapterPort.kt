@@ -1,10 +1,9 @@
 package com.teady.budgetserver.adapter.primary.web.port
 
-import com.teady.budgetserver.application.dto.OpenBankingCardDto
-import java.time.LocalDateTime
+import com.teady.budgetserver.application.dto.OpenBankingCardDtoWithClient
 
 interface WebBudgetOpenBankingAdapterPort {
-    fun cards(userId: String): List<OpenBankingCardDto>
-    fun cards(userId: String, openBankingCardDto: OpenBankingCardDto)
-    fun cardCreatedTime(userId: String, openBankingCardDto: OpenBankingCardDto): String?
+    fun cards(userId: String): List<OpenBankingCardDtoWithClient>
+    fun cards(userId: String, openBankingCardDtoWithClient: OpenBankingCardDtoWithClient)
+    fun cardCreatedTime(userId: String, openBankingCardDtoWithClient: OpenBankingCardDtoWithClient): String?
 }

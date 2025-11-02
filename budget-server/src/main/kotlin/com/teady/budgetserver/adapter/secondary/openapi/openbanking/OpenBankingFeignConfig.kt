@@ -30,15 +30,7 @@ class OpenBankingFeignConfig {
     fun requestInterceptor(): RequestInterceptor {
         return RequestInterceptor { template ->
             // 공통 헤더 추가
-            template.header("X-Client-Name", "Budget-Server")
-            template.header("User-Agent", "Budget-API-Client/1.0")
-
-            // 인증 토큰이 필요한 경우
-            // val token = getAuthToken()
-            // template.header("Authorization", "Bearer $token")
-
-            // 요청 로깅
-            println("Feign Request: ${template.method()} ${template.url()}")
+            println("Feign Request: ${template.method()} ${template.url()} ${String(template.body())}")
         }
     }
 
