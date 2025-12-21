@@ -1,5 +1,6 @@
+# 공통 (default)
 server:
-  port: {PORT:8000}
+  port: ${PORT:8000}
 
 spring:
   application:
@@ -14,14 +15,20 @@ spring:
         - id: budget-server-apidocs
           uri: lb://budget-server
           predicates:
-            - Path=/apidocs/budget-server/** # /apidocs/budget-server/index.html
+            - Path=/apidocs/budget-server/**
           filters:
-            - RewritePath=/apidocs/budget-server/(?<segment>.*), /docs/$\{segment} # /docs/index.html
+            # 주의: ${segment}는 YAML에서 EL로 인식되므로 백슬래시로 이스케이프 필요
+            - RewritePath=/apidocs/budget-server/(?<segment>.*), /docs/\${segment}
+
+# Eureka 기본값은 localhost이지만, 환경변수로 덮어쓰기 가능하게 처리
+# 우선순위: EUREKA_SERVER_URL > EUREKA_CLIENT_SERVICE_URL_DEFAULT_ZONE > localhost
+# 예) https://eureka-server-xxxxx.onrender.com/eureka/
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka/ # Eureka
+      defaultZone: ${EUREKA_SERVER_URL:${EUREKA_CLIENT_SERVICE_URL_DEFAULT_ZONE:http://localhost:8761/eureka/}}
 
+# 게이트웨이에서 사용하는 시크릿(필수)
 gateway:
   secret: ${GATEWAY_SECRET}
 
@@ -34,8 +41,25 @@ management:
     tags:
       application: ${spring.application.name}
 
-logging:
+# 로컬 개발용 상세 로그
+yml_logging_local:
   level:
     org.springframework.cloud.gateway: TRACE
     reactor.netty.http.client: DEBUG
     reactor.netty.http.server: DEBUG
+
+---
+
+# prod (Render)
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+# prod에서는 과도한 디버그를 줄이고 INFO 중심으로 설정
+logging:
+  level:
+    root: INFO
+    org.springframework.cloud.gateway: INFO
+    reactor.netty.http.client: INFO
+    reactor.netty.http.server: INFO
