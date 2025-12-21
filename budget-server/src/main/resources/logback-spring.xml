@@ -62,6 +62,7 @@
 
     <springProfile name="prod">
         <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
             <appender-ref ref="SIFT_USER"/>
             <appender-ref ref="FILE_ERROR"/>
         </root>

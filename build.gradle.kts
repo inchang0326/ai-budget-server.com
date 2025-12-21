@@ -44,7 +44,6 @@ subprojects {
             "implementation"("io.github.resilience4j:resilience4j-feign")
 
             // Monitoring
-            "implementation"("org.springframework.boot:spring-boot-starter-actuator")
             "implementation"("io.micrometer:micrometer-registry-prometheus")
 
             // Test
