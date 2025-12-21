@@ -1,6 +1,5 @@
-# Eureka 서버는 관례적으로 8761 포트를 사용함
 server:
-  port: 8761
+  port:  ${PORT:8761}
 spring:
   application:
     name: eureka-server
