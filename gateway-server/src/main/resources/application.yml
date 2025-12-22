@@ -56,6 +56,24 @@ spring:
     activate:
       on-profile: prod
 
+eureka:
+  instance:
+    # 1. Render가 제공하는 외부 도메인을 호스트명으로 사용
+    hostname: ${RENDER_EXTERNAL_HOSTNAME}
+
+    # 2. IP 대신 호스트명(도메인)을 우선 사용하도록 설정 (중요)
+    prefer-ip-address: false
+
+    # 3. Render는 HTTPS를 사용하므로, Eureka에 등록되는 링크도 HTTPS여야 함
+    non-secure-port-enabled: false
+    secure-port-enabled: true
+    secure-port: 443
+
+    # 4. 헬스 체크 경로 명시 (HTTPS 프로토콜 사용)
+    status-page-url: https://${eureka.instance.hostname}/actuator/info
+    health-check-url: https://${eureka.instance.hostname}/actuator/health
+    home-page-url: https://${eureka.instance.hostname}/
+
 # prod에서는 과도한 디버그를 줄이고 INFO 중심으로 설정
 logging:
   level:
