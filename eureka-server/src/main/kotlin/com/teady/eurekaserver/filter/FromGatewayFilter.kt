@@ -25,11 +25,11 @@ class FromGatewayFilter(
     ) {
         val secretHeader = request.getHeader("X-GATEWAY-SECRET")
 
-        if (secretHeader == null || secretHeader != gatewaySecret) {
-            response.status = HttpServletResponse.SC_FORBIDDEN
-            response.writer.write("Access Denied: Invalid")
-            return
-        }
+//        if (secretHeader == null || secretHeader != gatewaySecret) {
+//            response.status = HttpServletResponse.SC_FORBIDDEN
+//            response.writer.write("Access Denied: Invalid")
+//            return
+//        }
 
         filterChain.doFilter(request, response)
     }
