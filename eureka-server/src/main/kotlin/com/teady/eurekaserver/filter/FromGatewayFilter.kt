@@ -12,6 +12,12 @@ class FromGatewayFilter(
     @Value("\${gateway.secret}") private val gatewaySecret: String
 ) : OncePerRequestFilter() {
 
+    override fun shouldNotFilter(request: HttpServletRequest): Boolean {
+        val path = request.requestURI
+        // Render 헬스 체크 경로(/actuator/health)나 루트(/) 등은 제외
+        return path == "/actuator/health" || path == "/"
+    }
+
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
