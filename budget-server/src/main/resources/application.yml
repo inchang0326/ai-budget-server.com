@@ -200,6 +200,10 @@ eureka:
     hostname: ${RENDER_EXTERNAL_HOSTNAME}
     prefer-ip-address: false
     instance-id: ${spring.application.name}:${random.value}
+    non-secure-port: 80
+    secure-port: 443
+    secure-port-enabled: true
+    non-secure-port-enabled: false
 
 gateway:
   secret: ${GATEWAY_SECRET}
