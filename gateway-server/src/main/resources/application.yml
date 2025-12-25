@@ -26,7 +26,7 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: ${EUREKA_SERVER_URL:${EUREKA_CLIENT_SERVICE_URL_DEFAULT_ZONE:http://localhost:8761/eureka/}}
+      defaultZone: ${EUREKA_SERVER_URL:${EUREKA_CLIENT_SERVICE_URL_DEFAULT_ZONE:http://localhost:8761/eureka}}
 
 # 게이트웨이에서 사용하는 시크릿(필수)
 gateway:
@@ -58,21 +58,9 @@ spring:
 
 eureka:
   instance:
-    # 1. Render 내부 서비스 이름(Service Name)을 호스트명으로 사용
     hostname: ${RENDER_EXTERNAL_HOSTNAME}
-
-    # 2. IP 대신 호스트명(도메인)을 우선 사용하도록 설정 (중요)
     prefer-ip-address: false
-
-    # 3. 중요: 내부 통신은 HTTP(8000)를 사용하므로 secure 관련 설정 제거 또는 false
-    non-secure-port: ${PORT:8000}
-    non-secure-port-enabled: true
-    secure-port-enabled: false
-
-    # 4. 헬스 체크 경로 명시 (HTTPS 프로토콜 사용)
-    status-page-url: http://${eureka.instance.hostname}:${server.port}/actuator/info
-    health-check-url: http://${eureka.instance.hostname}:${server.port}/actuator/health
-    home-page-url: http://${eureka.instance.hostname}:${server.port}/
+    instance-id: ${spring.application.name}:${random.value}
 
 # prod에서는 과도한 디버그를 줄이고 INFO 중심으로 설정
 logging:
