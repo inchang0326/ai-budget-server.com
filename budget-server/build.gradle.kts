@@ -48,6 +48,8 @@ dependencies {
 
     // Monitoring
     implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("io.sentry:sentry-spring-boot-starter:7.3.0")
+    implementation("io.sentry:sentry-logback:7.3.0")
 
     // Test
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
