@@ -40,7 +40,7 @@ class WebBudgetAdapterTest {
     @MockBean
     private lateinit var jpaMetamodelMappingContext: JpaMetamodelMappingContext
 
-    @Value("\${GATEWAY_SECRET}")
+    @Value("\${gateway.secret}")
     private lateinit var gatewaySecret: String
 
     @Test
