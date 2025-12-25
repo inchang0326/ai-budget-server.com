@@ -64,10 +64,10 @@ eureka:
     # 2. IP 대신 호스트명(도메인)을 우선 사용하도록 설정 (중요)
     prefer-ip-address: false
 
-    # 3. Render는 HTTPS를 사용하므로, Eureka에 등록되는 링크도 HTTPS여야 함
-    non-secure-port-enabled: false
-    secure-port-enabled: true
-    secure-port: 443
+    # 3. 중요: 내부 통신은 HTTP(8000)를 사용하므로 secure 관련 설정 제거 또는 false
+    non-secure-port: ${PORT:8000}
+    non-secure-port-enabled: true
+    secure-port-enabled: false
 
     # 4. 헬스 체크 경로 명시 (HTTPS 프로토콜 사용)
     status-page-url: https://${eureka.instance.hostname}/actuator/info
