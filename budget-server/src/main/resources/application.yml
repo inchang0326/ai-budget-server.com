@@ -198,7 +198,7 @@ eureka:
     instance-info-replication-interval-seconds: 30
   instance:
     # 1. Render 내부 서비스 이름(Service Name)을 호스트명으로 사용
-    hostname: budget-server
+    hostname: ${RENDER_EXTERNAL_HOSTNAME}
 
     # 2. IP 대신 호스트명 사용 (Render 내부 DNS 활용)
     prefer-ip-address: false
