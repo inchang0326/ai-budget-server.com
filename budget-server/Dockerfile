@@ -22,5 +22,4 @@ COPY --from=builder /workspace/budget-server/build/libs/*.jar app.jar
 EXPOSE 8080
 
 # Spring이 $PORT로 바인딩되도록 JVM 옵션으로 강제
-# management.server.port도 동일 포트로 맞춰 헬스체크 불일치 방지
-CMD ["sh", "-c", "java -Dserver.port=$PORT -Dmanagement.server.port=$PORT -jar app.jar"]
+CMD ["sh", "-c", "java -Dserver.port=$PORT -jar app.jar"]

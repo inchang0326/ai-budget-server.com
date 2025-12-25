@@ -12,7 +12,7 @@
     - Data interface: Spring Data JPA/Redis
     - Service Interface: Spring Cloud OpenFeign
   - Logging: Logback + ELK Stack
-  - Monitoring: Spring Actuator + Prometheus + Grafana
+  - Monitoring: Spring Actuator + Prometheus + Grafana, Sentry
   - API Docs: Spring REST Docs
 - DBMS: PostgreSQL(with pgvector)
 
