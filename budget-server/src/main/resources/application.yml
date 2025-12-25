@@ -199,6 +199,10 @@ eureka:
 gateway:
   secret: ${GATEWAY_SECRET}
 
+openbanking:
+  api:
+    base-url: https://developers.nonghyup.com
+
 logging:
   level:
     root: WARN
