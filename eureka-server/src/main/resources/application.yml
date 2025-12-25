@@ -11,7 +11,7 @@ eureka:
     fetch-registry: false # eureka 서버로서 registry에 등록된 microeservices 목록 조회를 하지 않음
     service-url:
     # 클라이언트들이 바라볼 주소
-      defaultZone: https://${eureka.instance.hostname}:8761/eureka/
+      defaultZone: http://${eureka.instance.hostname}:8761/eureka/
 
 management:
   endpoints:
