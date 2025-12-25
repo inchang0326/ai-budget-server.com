@@ -9,6 +9,7 @@ import com.teady.budgetserver.application.dto.toUserId
 import com.teady.budgetserver.domain.budget.entity.OpenBankingCardHistoryId
 import com.teady.budgetserver.domain.budget.entity.TransactionId
 import com.teady.budgetserver.domain.budget.executor.TransactionExecutor
+import io.sentry.Sentry
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -51,6 +52,12 @@ class BudgetUseCase(
     }
 
     override fun transactions(userId: String, year: Int, month: Int): List<TransactionDto> {
+
+        try {
+            throw Exception("This is a test.")
+        } catch (e: Exception) {
+            Sentry.captureException(e)
+        }
 
         val list = ArrayList<TransactionDto>()
 

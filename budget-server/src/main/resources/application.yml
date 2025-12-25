@@ -126,6 +126,7 @@ openbanking:
 
 sentry:
   dsn: ${SENTRY_DSN}             # Render 환경 변수에서 가져옴
+  send-default-pii: true
   exception-resolver-order: -2147483647 # 에러 처리 우선순위 높임
   traces-sample-rate: 1.0        # 성능 모니터링 샘플링 비율 (1.0 = 100% 수집)
   logging:

@@ -5,6 +5,18 @@ plugins {
     kotlin("jvm")
     kotlin("plugin.spring")
     kotlin("plugin.jpa")
+    id("io.sentry.jvm.gradle") version "5.12.2"
+}
+
+sentry {
+    // Generates a JVM (Java, Kotlin, etc.) source bundle and uploads your source code to Sentry.
+    // This enables source context, allowing you to see your source
+    // code as part of your stack traces in Sentry.
+    includeSourceContext = true
+
+    org = "steadylogic"
+    projectName = "ai-budget-server"
+    authToken = System.getenv("sntrys_eyJpYXQiOjE3NjY2NTM0MzEuODY5NTY5LCJ1cmwiOiJodHRwczovL3NlbnRyeS5pbyIsInJlZ2lvbl91cmwiOiJodHRwczovL2RlLnNlbnRyeS5pbyIsIm9yZyI6InN0ZWFkeWxvZ2ljIn0")
 }
 
 configurations {
@@ -48,8 +60,6 @@ dependencies {
 
     // Monitoring
     implementation("org.springframework.boot:spring-boot-starter-actuator")
-    implementation("io.sentry:sentry-spring-boot-starter:7.3.0")
-    implementation("io.sentry:sentry-logback:7.3.0")
 
     // Test
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
