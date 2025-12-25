@@ -12,7 +12,7 @@ class CorsFilter {
     @Bean
     fun corsWebFilter(): CorsWebFilter {
         val corsConfig = CorsConfiguration()
-        corsConfig.allowedOrigins = listOf("http://localhost:5173")
+        corsConfig.allowedOrigins = listOf("http://localhost:5173", "https://ai-budget-pwa-com.vercel.app")
         corsConfig.allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
         corsConfig.addAllowedHeader("*")
         corsConfig.allowCredentials = true
