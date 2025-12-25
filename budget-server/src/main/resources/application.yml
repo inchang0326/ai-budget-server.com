@@ -124,6 +124,14 @@ openbanking:
   api:
     base-url: https://developers.nonghyup.com
 
+sentry:
+  dsn: ${SENTRY_DSN}             # Render 환경 변수에서 가져옴
+  exception-resolver-order: -2147483647 # 에러 처리 우선순위 높임
+  traces-sample-rate: 1.0        # 성능 모니터링 샘플링 비율 (1.0 = 100% 수집)
+  logging:
+    minimum-event-level: error   # error 레벨 로그만 Sentry로 전송 (info, debug 제외)
+    minimum-breadcrumb-level: info # 에러 발생 전의 info 로그들을 빵부스러기처럼 같이 보냄
+
 logging:
   level:
     org.hibernate.SQL: debug
@@ -166,7 +174,7 @@ spring:
       validation-timeout: 5000
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     properties:
       hibernate:
 #        dialect: org.hibernate.dialect.PostgreSQL10Dialect
