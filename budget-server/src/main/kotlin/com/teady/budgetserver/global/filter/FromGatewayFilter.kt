@@ -9,7 +9,7 @@ import org.springframework.web.filter.OncePerRequestFilter
 
 @Component
 class FromGatewayFilter(
-    @Value("\${gateway.secret}") private val gatewaySecret: String
+        @Value("\${gateway.secret}") private val gatewaySecret: String
 ) : OncePerRequestFilter() {
 
     override fun doFilterInternal(

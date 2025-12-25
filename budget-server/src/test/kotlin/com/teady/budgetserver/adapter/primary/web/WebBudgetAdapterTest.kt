@@ -2,7 +2,7 @@ package com.teady.budgetserver.adapter.primary.web
 
 import com.teady.budgetserver.application.dto.TransactionDto
 import com.teady.budgetserver.application.usecase.BudgetUseCase
-import com.teady.budgetserver.domain.budget.entity.TransactionType
+import com.teady.budgetserver.domain.budget.entity.TransactionTypeEnum
 import io.micrometer.core.instrument.MeterRegistry
 import org.junit.jupiter.api.Test
 
@@ -13,6 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.web.servlet.MockMvc
 
 import org.mockito.BDDMockito.given
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get
 import org.springframework.http.MediaType
@@ -39,6 +40,9 @@ class WebBudgetAdapterTest {
     @MockBean
     private lateinit var jpaMetamodelMappingContext: JpaMetamodelMappingContext
 
+    @Value("\${gateway.secret}")
+    private val gatewaySecret: String = ""
+
     @Test
     fun transactions() {
         val userId: String = "00000000000000000001"
@@ -48,12 +52,14 @@ class WebBudgetAdapterTest {
         val transactions: List<TransactionDto> = listOf(
             (TransactionDto(
                 "0000000000000000000120251009000000111",
-                TransactionType.income,
+                TransactionTypeEnum.income,
                 1000000.0,
                 "부수익",
                 "앱테크",
                 "2025-10-24",
-                "00000000000000000001"
+                cardCompany = null,
+                timestamp = "20251009000000111",
+                cardNo = null,
             ))
         )
 
@@ -62,6 +68,7 @@ class WebBudgetAdapterTest {
         mockMvc
             .perform(
                 get("/budget/transactions")
+                    .header("X-GATEWAY-SECRET", gatewaySecret)
                     .header("X-USER-ID", userId)
                     .param("year", year.toString())
                     .param("month", month.toString())
@@ -89,7 +96,9 @@ class WebBudgetAdapterTest {
                         fieldWithPath("data.items[].category").description("거래 범주"),
                         fieldWithPath("data.items[].description").description("상세 설명"),
                         fieldWithPath("data.items[].date").description("거래 일자"),
-                        fieldWithPath("data.items[].userId").description("사용자 ID")
+                        fieldWithPath("data.items[].cardCompany").description("카드사"),
+                        fieldWithPath("data.items[].timestamp").description("timestamp"),
+                        fieldWithPath("data.items[].cardNo").description("카드번호")
                     )
                 )
             )
