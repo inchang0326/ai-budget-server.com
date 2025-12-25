@@ -70,9 +70,9 @@ eureka:
     secure-port-enabled: false
 
     # 4. 헬스 체크 경로 명시 (HTTPS 프로토콜 사용)
-    status-page-url: https://${eureka.instance.hostname}/actuator/info
-    health-check-url: https://${eureka.instance.hostname}/actuator/health
-    home-page-url: https://${eureka.instance.hostname}/
+    status-page-url: http://${eureka.instance.hostname}:${server.port}/actuator/info
+    health-check-url: http://${eureka.instance.hostname}:${server.port}/actuator/health
+    home-page-url: http://${eureka.instance.hostname}:${server.port}/
 
 # prod에서는 과도한 디버그를 줄이고 INFO 중심으로 설정
 logging:
