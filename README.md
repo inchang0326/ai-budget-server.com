@@ -15,6 +15,7 @@
   - Monitoring: Spring Actuator + Prometheus + Grafana, Sentry
   - API Docs: Spring REST Docs
 - DBMS: PostgreSQL(with pgvector)
+- Server Hosting: Render(https://render.com/)
 
 ## Features
 - gateway-server
