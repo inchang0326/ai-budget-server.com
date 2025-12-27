@@ -194,6 +194,20 @@ eureka:
     hostname: ${RENDER_EXTERNAL_HOSTNAME} # eureka-server로 application 질의 시 응답할 host의 도메인
     prefer-ip-address: false # 도메인 대신 IP 설정 false
     instance-id: ${spring.application.name}:${random.value} # eureka-server에 등록될 고유 id
+#  - 이슈: API Response Timeout
+#  - 상황: BudgetApp <> MSA(gateway-server, eureka-server, budget-server)
+#  (1) BudgetApp에서 API 요청 to gateway-server
+#  (2) gateway-server에서 eureka-server로 budget-server의 Host(domain preferred to ip) 질의
+#  (3) eureka-server에서 http://budget-server-mb4y.onrender.com:10000 응답
+#  (4) gateway-server에서 API 요청 to budget-server
+#  => https://budget-server-xxxx.onrender.com:10000/{api_path}
+#  (5) Timeout 발생
+#  => 내부 Port인 10000 접근 불가
+#  => 외부 Host를 내부 Host로 변경해봤지만 이 역시 접근 불가
+#  => eureka-server에 budget-server의 경우 Host 응답 시 내부 Port 대신 외부 Secured Port 적용 제안
+#  (6) gateway-server에서 API 요청 to budget-server
+#  => https://budget-server-mb4y.onrender.com:443/{api_path}
+#  (7) 정상 응답
     non-secure-port: 80
     secure-port: 443
     secure-port-enabled: true
