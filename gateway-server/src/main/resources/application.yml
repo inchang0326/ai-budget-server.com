@@ -9,6 +9,8 @@ spring:
     gateway:
       routes:
         - id: budget-server-route
+          # eureka client 등록 및 의존성으로 인해 자동으로 eureka-server를 찾음
+          # eureka-server 서버로 budget-server의 host를 질의함
           uri: lb://budget-server
           predicates:
             - Path=/budget/**
@@ -17,18 +19,17 @@ spring:
           predicates:
             - Path=/apidocs/budget-server/**
           filters:
-            # 주의: ${segment}는 YAML에서 EL로 인식되므로 백슬래시로 이스케이프 필요
+            # ${segment}는 YAML에서 EL로 인식되므로 백슬래시로 이스케이프 필요
+            # ex) /apidocs/budget-server/index.html -> /docs/index.html
             - RewritePath=/apidocs/budget-server/(?<segment>.*), /docs/\${segment}
 
-# Eureka 기본값은 localhost이지만, 환경변수로 덮어쓰기 가능하게 처리
-# 우선순위: EUREKA_SERVER_URL > EUREKA_CLIENT_SERVICE_URL_DEFAULT_ZONE > localhost
-# 예) https://eureka-server-xxxxx.onrender.com/eureka/
 eureka:
   client:
     service-url:
-      defaultZone: ${EUREKA_SERVER_URL:${EUREKA_CLIENT_SERVICE_URL_DEFAULT_ZONE:http://localhost:8761/eureka}}
+      defaultZone: ${EUREKA_SERVER_URL:http://localhost:8761/eureka}
+  instance:
+    instance-id: ${spring.application.name}:${random.value}
 
-# 게이트웨이에서 사용하는 시크릿(필수)
 gateway:
   secret: ${GATEWAY_SECRET}
 
@@ -41,8 +42,15 @@ management:
     tags:
       application: ${spring.application.name}
 
-# 로컬 개발용 상세 로그
-yml_logging_local:
+---
+
+# local
+spring:
+  config:
+    activate:
+      on-profile: local
+
+logging:
   level:
     org.springframework.cloud.gateway: TRACE
     reactor.netty.http.client: DEBUG
@@ -50,7 +58,7 @@ yml_logging_local:
 
 ---
 
-# prod (Render)
+# prod
 spring:
   config:
     activate:
