@@ -6,11 +6,9 @@ spring:
 eureka:
   instance:
     hostname: ${RENDER_EXTERNAL_HOSTNAME:localhost} # Render 제공 외부 도메인 (내부 도메인 X)
-  client:
+  client: # 단독 서버 명시
     register-with-eureka: false # eureka 서버로서 eureka 서버에 클라이언트로서 등록을 하지 않음
     fetch-registry: false # eureka 서버로서 registry에 등록된 microeservices 목록 조회를 하지 않음
-    service-url:
-      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka # eureka 클라이언트가 요청할 주소
 
 management:
   endpoints:
