@@ -4,37 +4,33 @@ spring:
     name: budget-server
 server:
   port: ${PORT:8080}
----
+
+--- # 문서 구분자
 
 # local
 spring:
   config:
     activate:
       on-profile: local
-  devtools:
-    restart:
-      enabled: false
-      trigger-file: .reloadtrigger
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/postgres2
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
-    hikari:
-      minimum-idle: 5
-      maximum-pool-size: 10
-      idle-timeout: 30000
-      max-lifetime: 1800000
+    hikari:                   # HikariCP Connection Pool
+      minimum-idle: 5         # Pool 유지 최소 유휴 Connection 수
+      maximum-pool-size: 10   # Pool의 최대 Connection 수 (너무 크면 DB 부하, 너무 작으면 대기 발생)
+      idle-timeout: 30000     # Connection의 유휴 상태 유지 최대 시간 (ms)
+      max-lifetime: 1800000   # Connection 최대 유지 시간 (ms). DB 설정 wait_timeout보다 짧아야 함
       pool-name: HikariPool-1
-      keepalive-time: 30000 # 30초마다 keep-alive 실행
-      validation-timeout: 5000 # 5초 내에 커넥션 검증
+      keepalive-time: 30000   # 30초마다 DB Ping 통해 Connection 여부 확인
+      validation-timeout: 5000 # connection 유효성 검사 타임아웃
   jpa:
     hibernate:
-      ddl-auto: none
-#      show-sql: true
+      ddl-auto: none # Flyway를 사용하므로 Hibernate의 DDL 자동 생성 기능은 끔
+      show-sql: true
     properties:
       hibernate:
-#        dialect: org.hibernate.dialect.PostgreSQL10Dialect
         format_sql: true
         use_sql_comments: true
   flyway:
@@ -73,9 +69,9 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: ${EUREKA_SERVER_URL:http://localhost:8761/eureka}
+      defaultZone: http://localhost:8761/eureka # eureka-server 주소
   instance:
-    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    instance-id: ${spring.application.name}:${random.value} # eureka-server 대시보드에 등록될 식별값
 
 gateway:
   secret: ${GATEWAY_SECRET}
@@ -105,8 +101,7 @@ resilience4j:
         permittedNumberOfCallsInHalfOpenState: 2 # half-open 상태에서 허용할 테스트 요청 수
         automaticTransitionFromOpenToHalfOpenEnabled: true # waitDurationInOpenState 이후 자동으로 open > half-open 상태 변경할지 여부
     instances:
-      # Feign 클라이언트별 개별 설정
-      OpenBankingFeignClient:
+      OpenBankingFeignClient: # Feign 클라이언트별 개별 설정
         baseConfig: default # 위 default 설정 상속
   retry:
     configs:
@@ -125,26 +120,26 @@ openbanking:
     base-url: https://developers.nonghyup.com
 
 sentry:
-  dsn: ${SENTRY_DSN}             # Render 환경 변수에서 가져옴
-  send-default-pii: true
-  exception-resolver-order: -2147483647 # 에러 처리 우선순위 높임
-  traces-sample-rate: 1.0        # 성능 모니터링 샘플링 비율 (1.0 = 100% 수집)
+  dsn: ${SENTRY_DSN} # Sentry에서 식별할 프로젝트 key
+  send-default-pii: true # 사용자 개인정보(IP 등) 포함 여부
+  exception-resolver-order: -2147483647 # 스프링 예외 처리 체인에서 가장 먼저 실행되도록 설정
+  traces-sample-rate: 1.0 # 성능 모니터링 샘플링 비율 (1.0 = 100% 모든 트래잭션 수집)
   logging:
-    minimum-event-level: error   # error 레벨 로그만 Sentry로 전송 (info, debug 제외)
-    minimum-breadcrumb-level: info # 에러 발생 전의 info 로그들을 빵부스러기처럼 같이 보냄
+    minimum-event-level: error # Error 레벨만 이슈로 생성
+    minimum-breadcrumb-level: info # 에러 발생 경로 추적을 위해 Info 로그도 수집
 
 logging:
   level:
-    org.hibernate.SQL: debug
-    org.hibernate.orm.jdbc.bind: trace
-    com.teady.budgetserver.adapter.secondary.openapi.openbanking: DEBUG
-    feign: DEBUG
+    org.hibernate.SQL: debug # 실행 쿼리 debug
+    org.hibernate.orm.jdbc.bind: trace # 실행 쿼리 binding variables 확인
+    com.teady.budgetserver.adapter.secondary.openapi.openbanking: DEBUG # 특정 패키지 debug
+    feign: DEBUG # feign 통신 상세 로그 debug
 
 management:
   endpoints:
     web:
       exposure:
-        include: health,info,prometheus,metrics,circuitbreakers
+        include: health,info,prometheus,metrics,circuitbreakers # actuator 노출 end-potins
       base-path: /actuator
   endpoint:
     health:
@@ -178,7 +173,6 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
-#        dialect: org.hibernate.dialect.PostgreSQL10Dialect
         format_sql: false
         use_sql_comments: false
         jdbc:
@@ -213,12 +207,12 @@ openbanking:
     base-url: https://developers.nonghyup.com
 
 sentry:
-  dsn: ${SENTRY_DSN}             # Render 환경 변수에서 가져옴
-  exception-resolver-order: -2147483647 # 에러 처리 우선순위 높임
-  traces-sample-rate: 1.0        # 성능 모니터링 샘플링 비율 (1.0 = 100% 수집)
+  dsn: ${SENTRY_DSN}
+  exception-resolver-order: -2147483647
+  traces-sample-rate: 1.0
   logging:
-    minimum-event-level: error   # error 레벨 로그만 Sentry로 전송 (info, debug 제외)
-    minimum-breadcrumb-level: info # 에러 발생 전의 info 로그들을 빵부스러기처럼 같이 보냄
+    minimum-event-level: error
+    minimum-breadcrumb-level: info
 
 logging:
   level:
