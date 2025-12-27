@@ -10,7 +10,7 @@ eureka:
     register-with-eureka: false # eureka 서버로서 eureka 서버에 클라이언트로서 등록을 하지 않음
     fetch-registry: false # eureka 서버로서 registry에 등록된 microeservices 목록 조회를 하지 않음
     service-url:
-      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka # eureka 클라이언트의 요청 주소
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka # eureka 클라이언트가 요청할 주소
 
 management:
   endpoints:

@@ -10,7 +10,7 @@ spring:
       routes:
         - id: budget-server-route
           # eureka client 등록 및 의존성으로 인해 자동으로 eureka-server를 찾음
-          # eureka-server 서버로 budget-server의 host를 질의함
+          # eureka-server 서버로 application 이름 통해 host를 질의함
           uri: lb://budget-server
           predicates:
             - Path=/budget/**
@@ -66,9 +66,9 @@ spring:
 
 eureka:
   instance:
-    hostname: ${RENDER_EXTERNAL_HOSTNAME}
-    prefer-ip-address: false
-    instance-id: ${spring.application.name}:${random.value}
+    hostname: ${RENDER_EXTERNAL_HOSTNAME} # eureka-server로 application 질의 시 응답할 host의 도메인
+    prefer-ip-address: false  # 도메인 대신 IP 설정 false
+    instance-id: ${spring.application.name}:${random.value} # eureka-server에 등록될 고유 id
 
 # prod에서는 과도한 디버그를 줄이고 INFO 중심으로 설정
 logging:

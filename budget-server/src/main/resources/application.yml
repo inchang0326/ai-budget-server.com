@@ -191,9 +191,9 @@ eureka:
       enabled: true
     instance-info-replication-interval-seconds: 30
   instance:
-    hostname: ${RENDER_EXTERNAL_HOSTNAME}
-    prefer-ip-address: false
-    instance-id: ${spring.application.name}:${random.value}
+    hostname: ${RENDER_EXTERNAL_HOSTNAME} # eureka-server로 application 질의 시 응답할 host의 도메인
+    prefer-ip-address: false # 도메인 대신 IP 설정 false
+    instance-id: ${spring.application.name}:${random.value} # eureka-server에 등록될 고유 id
     non-secure-port: 80
     secure-port: 443
     secure-port-enabled: true
