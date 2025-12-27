@@ -30,7 +30,6 @@ class OpenBankingFeignConfig {
     fun requestInterceptor(): RequestInterceptor {
         return RequestInterceptor { template ->
             // 공통 헤더 추가
-            println("Feign Request: ${template.method()} ${template.url()} ${String(template.body())}")
         }
     }
 

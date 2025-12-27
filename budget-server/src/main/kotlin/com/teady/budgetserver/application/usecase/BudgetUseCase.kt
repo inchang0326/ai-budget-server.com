@@ -132,11 +132,6 @@ class BudgetUseCase(
         transactionExecutor.preExecute()
         transactionDto.id ?: return
 
-        println("test=> " + transactionDto.cardNo)
-        println("test=> " + transactionDto.id.toUserId())
-        println("test=> " + transactionDto.id.toCardNo())
-        println("test=> " + transactionDto.id.toTimestamp())
-
         if (transactionDto.cardNo == null) budgetRepositoryPort.deleteTransactionById(
             TransactionId(
                 transactionDto.id.toUserId(),
