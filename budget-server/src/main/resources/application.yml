@@ -180,6 +180,8 @@ spring:
           fetch_size: 50
         order_inserts: true
         order_updates: true
+#  flyway:
+#    enabled: false
 
 eureka:
   client:
