@@ -15,7 +15,10 @@
   - Monitoring: Spring Actuator + Prometheus + Grafana, Sentry
   - API Docs: Spring REST Docs
 - DBMS: PostgreSQL(with pgvector)
-- DevOps: Render, Render Postgres, Flyway
+- DevOps:
+  - Back-end CI/CD: Render
+  - DBMS Hosting: Render Postgres
+  - DBMS Version Control: Flyway
 
 ## Features
 - gateway-server
