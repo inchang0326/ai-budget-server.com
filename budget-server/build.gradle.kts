@@ -35,7 +35,6 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
     // Development
-//    developmentOnly("org.springframework.boot:spring-boot-devtools")
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
 
@@ -57,9 +56,6 @@ dependencies {
 
     // MSA
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
-
-    // Monitoring
-    implementation("org.springframework.boot:spring-boot-starter-actuator")
 
     // Test
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
